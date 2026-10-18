@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { KnowledgeGateway } from '../../src/knowledge/api/core/KnowledgeGateway';
 import { SecurityResolver } from '../../src/knowledge/api/core/SecurityResolver';
 import { FeatureKnowledgeAPI } from '../../src/knowledge/api/v1/domains/DomainAPIs';
-import { KnowledgeRequest } from '../../src/knowledge/api/v1/models/KnowledgeRequest';
+import type { KnowledgeRequest } from '../../src/knowledge/api/v1/models/KnowledgeRequest';
 import { KnowledgeErrorCode } from '../../src/knowledge/api/v1/types/KnowledgeErrorCodes';
 import { QueryEngine } from '../../src/knowledge/query/core/QueryEngine';
 import { QueryPlanner } from '../../src/knowledge/query/core/QueryPlanner';

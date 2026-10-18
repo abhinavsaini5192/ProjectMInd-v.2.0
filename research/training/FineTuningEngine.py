@@ -1,9 +1,14 @@
 class FineTuningEngine:
-    """Handles the actual model fine-tuning process."""
+    """Simulated prototype demonstration harness for the research experiment lifecycle.
+    
+    NOTE: This is NOT a real neural model training engine. No PyTorch or TensorFlow
+    gradient updates or GPU weight fine-tuning occur here. Loss curves and checkpoints
+    are synthetic demonstrations of the experiment manager tracking workflow.
+    """
     
     def __init__(self, model_architecture: str = "llama-2-7b"):
         self.model_architecture = model_architecture
-        # Stubs for torch/transformers models
+        # Stubs for torch/transformers models - actual training not implemented
         
     def train(self, dataset, config: dict, experiment_manager, experiment_id: str):
         """Simulates a training loop."""

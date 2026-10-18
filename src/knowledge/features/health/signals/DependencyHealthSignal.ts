@@ -13,26 +13,27 @@ export class DependencyHealthSignal implements IFeatureHealthSignal {
     const featureId = context.feature.featureId;
 
     // Check for circular dependencies involving this feature
-    const involvedCycles = cycles.filter((c) => c.cyclePath.includes(featureId));
+    const involvedCycles = cycles.filter((c) => (c.cyclePath ?? c.features ?? []).includes(featureId));
     if (involvedCycles.length > 0) {
       for (const cycle of involvedCycles) {
+        const cyclePath = cycle.cyclePath ?? cycle.features ?? [];
         signals.push(
           HealthSignalHelper.createSignal({
             featureId,
             signalType: 'CIRCULAR_FEATURE_DEPENDENCY',
             severity: 'CRITICAL',
-            value: cycle.cyclePath.join(' -> '),
+            value: cyclePath.join(' -> '),
             normalizedValue: 100,
-            description: `Circular dependency detected involving this feature: ${cycle.cyclePath.join(' -> ')}`,
+            description: `Circular dependency detected involving this feature: ${cyclePath.join(' -> ')}`,
             evidence: [
               HealthSignalHelper.createEvidence({
                 sourceType: 'CYCLE_DETECTION',
                 sourceId: cycle.cycleId,
                 evidenceType: 'CIRCULAR_DEPENDENCY_PATH',
-                description: `Cycle path contains features: ${cycle.cyclePath.join(', ')}`,
+                description: `Cycle path contains features: ${cyclePath.join(', ')}`,
                 strength: 1.0,
                 confidence: 0.98,
-                metadata: { cycleLength: cycle.length, cyclePath: cycle.cyclePath }
+                metadata: { cycleLength: cycle.length ?? cyclePath.length, cyclePath }
               })
             ],
             source: this.id,

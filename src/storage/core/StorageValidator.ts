@@ -1,5 +1,5 @@
-import { IStorageValidator } from '../interfaces/IStorageValidator';
-import { IStorageProvider } from '../interfaces/IStorageProvider';
+import type { IStorageValidator } from '../interfaces/IStorageValidator';
+import type { IStorageProvider } from '../interfaces/IStorageProvider';
 import { StorageValidationError } from '../types/StorageErrors';
 
 export class StorageValidator implements IStorageValidator {
@@ -21,4 +21,4 @@ export class StorageValidator implements IStorageValidator {
   }
 }
 
-export const IStorageValidatorToken = Symbol('StorageValidator');
+export { IStorageValidatorToken } from '../interfaces/IStorageValidator';

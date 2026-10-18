@@ -1,0 +1,41 @@
+import type { ContextSection } from './ContextSection.js';
+import type { ContextFormat } from './ContextFormat.js';
+import type { ProjectContext } from '../../workspace/models/ProjectContext.js';
+import type { SecurityContext } from '../../security/models/SecurityContext.js';
+import type { TaskUnderstanding } from './TaskUnderstanding.js';
+
+export interface ContextRequest {
+  requestId?: string | undefined;
+  query?: string | undefined;
+  taskText?: string | undefined;
+  taskIntent?: Record<string, any> | undefined;
+  taskUnderstanding?: TaskUnderstanding | undefined;
+  featureIds?: string[] | undefined;
+  resourceIds?: string[] | undefined;
+  changedResources?: string[] | undefined;
+  workspaceId: string;
+  projectId?: string | undefined;
+  repositoryId: string;
+  projectContext?: ProjectContext | undefined;
+  securityContext?: SecurityContext | undefined;
+  modelProvider?: string | undefined;
+  modelName?: string | undefined;
+  tokenBudget?: number | undefined;
+  maxDepth?: number | undefined;
+  maxFeatures?: number | undefined;
+  maxResources?: number | undefined;
+  requestedSections?: ContextSection[] | undefined;
+  includeDependencies?: boolean | undefined;
+  includeDependents?: boolean | undefined;
+  includeBehavior?: boolean | undefined;
+  includeHealth?: boolean | undefined;
+  includeImpact?: boolean | undefined;
+  includeHistory?: boolean | undefined;
+  includeTests?: boolean | undefined;
+  includeExplanations?: boolean | undefined;
+  compactMode?: boolean | undefined;
+  compressionMode?: 'FULL' | 'COMPACT' | 'SUMMARY' | 'REFERENCE_ONLY' | undefined;
+  freshnessPolicy?: 'CURRENT' | 'ALLOW_STALE' | 'ANY' | undefined;
+  outputFormat?: ContextFormat | undefined;
+  explainSelection?: boolean | undefined;
+}

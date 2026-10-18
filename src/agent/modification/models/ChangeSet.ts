@@ -11,13 +11,13 @@ export interface ChangeSet {
   actionId: string;
   file: string;
   operation: ModificationOperation;
-  targetSymbol?: string;
+  targetSymbol?: string | undefined;
   beforeHash: string;
   afterHash: string;
   
   // The actual diff text
   patch: string;
-  affectedRange?: PatchRange;
+  affectedRange?: PatchRange | undefined;
   
   impact: ModificationImpact;
 }

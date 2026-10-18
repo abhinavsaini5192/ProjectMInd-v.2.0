@@ -1,10 +1,10 @@
-import { Service } from '../../interfaces';
-import { ASTEngine } from '../ASTEngine';
-import { ParserFramework } from '../ParserFramework';
-import { DiffEngine } from '../DiffEngine';
-import { FileDiscoveryEngine } from '../FileDiscoveryEngine';
-import { TypescriptParser, JavascriptParser, PythonParser } from '../parsers/MVParsers';
-import { ProjectMindError } from '../../errors';
+import { Service } from '../interfaces/index.js';
+import { ASTEngine } from './ASTEngine.js';
+import { ParserFramework } from './ParserFramework.js';
+import { DiffEngine } from './DiffEngine.js';
+import { FileDiscoveryEngine } from './FileDiscoveryEngine.js';
+import { TypescriptParser, JavascriptParser, PythonParser } from './parsers/MVParsers.js';
+import { ProjectMindError } from '../errors/index.js';
 
 /**
  * ExtractionService bridges Phase 2 (Extraction) into Phase 1 (Kernel).

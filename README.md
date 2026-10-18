@@ -140,16 +140,29 @@ projectmind doctor
 
 ---
 
-## CLI Commands
+## CLI Commands (Phase 9.1 Platform)
 
 | Command | Description |
 |---------|-------------|
-| `projectmind init` | Initializes a new ProjectMind memory space in the repository. |
-| `projectmind analyze` | Forces a repository scan and updates the Knowledge Graph. |
-| `projectmind doctor` | Runs diagnostics to verify health, config, and memory integrity. |
-| `projectmind benchmark` | Executes performance benchmarks on extraction and graph engines. |
-| `projectmind compatibility`| Generates a system report to ensure environment compatibility. |
+| `projectmind init` | Initializes ProjectMind memory space and configuration. |
+| `projectmind status` | Displays repository state, knowledge version, and health status. |
+| `projectmind analyze` | Triggers repository intelligence analysis and symbol extraction. |
+| `projectmind context` | Generates compact, explainable context payloads for coding tasks. |
+| `projectmind feature` | Inspects feature catalog, mappings, dependencies, and behavior flows. |
+| `projectmind impact` | Calculates change impact and downstream blast radius for a file or feature. |
+| `projectmind history` | Displays timeline milestones, feature updates, and evolution history. |
+| `projectmind health` | Displays comprehensive health statuses across platform subsystems. |
+| `projectmind update` | Triggers or inspects the incremental Knowledge Update Loop. |
+| `projectmind inspect` | Diagnostic inspection of repository, feature, context, or agent state. |
+| `projectmind doctor` | Runs diagnostics to verify installation, configuration, and environment. |
+| `projectmind completion`| Generates shell autocompletion scripts (bash, zsh, fish, powershell). |
+| `projectmind version` | Displays ProjectMind platform and CLI version information. |
+| `projectmind help` | Displays interactive or structured help for any command. |
 | `projectmind plugin` | Installs and manages ProjectMind plugins. |
+| `projectmind benchmark` | Executes performance benchmarks on extraction and graph engines. |
+| `projectmind compatibility` | Generates a system report to ensure environment compatibility. |
+
+*For complete usage, flags, and JSON output contracts, see the [CLI Documentation Suite](docs/cli/README.md).*
 
 ---
 
@@ -226,28 +239,24 @@ ProjectMind is not just a tool; it is a platform for the future of AI engineerin
 
 ---
 
-## Roadmap
+## Roadmap & Platform Architecture
 
-### Completed (v1.0)
-- [x] Phase 1: Kernel & Event System
-- [x] Phase 2: AST Extraction Layer
-- [x] Phase 3: Repository Intelligence & Knowledge Graph
-- [x] Phase 4: Context Orchestrator
-- [x] Phase 5: Memory Engine & Persistence
-- [x] Phase 6: Plugin Platform
-- [x] Phase 7: AI Connectivity API
-- [x] Phase 8: Developer CLI & SDK
-- [x] Phase 9: AI Research Layer (Dataset Generation)
-- [x] Phase 10: Production Release v1.0
+ProjectMind has exactly 10 major phases, each containing exactly 10 numbered sub-phases. Phase 9 delivers the complete, production-ready v1.0 enterprise platform:
 
-### Current Focus
-- [ ] Stabilizing the Python/Go parser plugins.
-- [ ] Expanding the Benchmark Suite for open-source repositories.
-- [ ] IDE Integrations (VS Code, JetBrains).
+### Phase 9 — Platform Ecosystem & Product Completion (v1.0)
+- [x] **9.1 Developer Experience & CLI Platform**: Modular command suite (`init`, `status`, `analyze`, `context`, `feature`, `doctor`, `workspace`, `project`, `plan`, `memory`, `search`, `plugin`, `analytics`), formatters, shell autocompletion.
+- [x] **9.2 Workspace & Project Management**: Multi-project tenancy, hierarchical repository mapping, isolated workspace domains.
+- [x] **9.3 Advanced Context Intelligence**: Token budgeting engine, context quality scoring, prompt redaction, deterministic fallback.
+- [x] **9.4 Semantic Retrieval & Project Memory**: Hybrid semantic retrieval, episodic and semantic memory stores, provenance governance.
+- [x] **9.5 Multi-Agent Collaboration**: Concurrent workspace sharing, resource reservation, conflict detection, explicit handoff coordinator.
+- [x] **9.6 Task Planning & Execution Orchestration**: Canonical task plans (`CanonicalTaskPlan`), DAG dependency validation, cycle prevention, checkpoints, revisions.
+- [x] **9.7 Learning & Feedback Intelligence**: Feedback collection, signal extraction, policy-governed candidate promotion, atomic rollback.
+- [x] **9.8 Plugin, SDK & Integration Ecosystem**: Sandboxed `PluginRuntime`, capability permissions, type-safe `ProjectMindClient` SDK, webhooks.
+- [x] **9.9 Enterprise Intelligence & Analytics**: Multi-tenant metrics, compliance auditing, velocity and quality telemetry, data quality validation.
+- [x] **9.10 Product Completion & v1.0**: Strategic Release Gates A–G verification, 24-gate technical certification, end-to-end integration suite.
 
-### Future
-- [ ] **ProjectMind-SLM**: Training and releasing the local Small Language Model.
-- [ ] Real-time Multi-Agent Collaboration backend.
+### Next Roadmap Phases
+- **Phase 10**: Advanced Enterprise Operations, Cloud Orchestration, and SLM Specialization.
 
 ---
 

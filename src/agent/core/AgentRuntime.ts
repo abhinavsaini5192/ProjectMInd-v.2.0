@@ -1,12 +1,12 @@
-import { IAgentRuntime } from '../interfaces/IAgentRuntime';
-import { IAgent } from '../interfaces/IAgent';
-import { IBrainGateway } from '../interfaces/IBrainGateway';
-import { AgentTask } from '../models/AgentTask';
-import { AgentResult } from '../models/AgentResult';
-import { Agent } from './Agent';
-import { KernelEventDispatcher } from '../../kernel/core/KernelEventDispatcher';
+import { ILegacyAgentRuntime } from '../interfaces/ILegacyAgentRuntime.js';
+import { IAgent } from '../interfaces/IAgent.js';
+import { IBrainGateway } from '../interfaces/IBrainGateway.js';
+import { AgentTask } from '../models/AgentTask.js';
+import { AgentResult } from '../models/AgentResult.js';
+import { Agent } from './Agent.js';
+import { KernelEventDispatcher } from '../../kernel/core/KernelEventDispatcher.js';
 
-export class AgentRuntime implements IAgentRuntime {
+export class AgentRuntime implements ILegacyAgentRuntime {
   private agents: Map<string, IAgent> = new Map();
 
   constructor(

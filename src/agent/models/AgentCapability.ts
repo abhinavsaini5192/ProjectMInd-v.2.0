@@ -1,0 +1,49 @@
+export type AgentCapability =
+  | 'CONTEXT_REQUEST'
+  | 'FEATURE_QUERY'
+  | 'RESOURCE_QUERY'
+  | 'IMPACT_QUERY'
+  | 'ARCHITECTURE_QUERY'
+  | 'HISTORY_QUERY'
+  | 'HEALTH_QUERY'
+  | 'TASK_CONTEXT'
+  | 'CONTEXT_EXPLANATION'
+  | 'CONTEXT_REFRESH'
+  | 'KNOWLEDGE_UPDATE'
+  | 'EXECUTION_REPORT'
+  | 'VERIFICATION_REPORT'
+  | 'SESSION_RESUME'
+  | 'CONTEXT_PINNING'
+  | 'CONTEXT_FEEDBACK'
+  | 'TASK_CONTROL'
+  | 'TASK_READ'
+  | 'OBSERVATION_READ'
+  | 'VERIFICATION_READ';
+
+export const AGENT_CAPABILITIES: readonly AgentCapability[] = [
+  'CONTEXT_REQUEST',
+  'FEATURE_QUERY',
+  'RESOURCE_QUERY',
+  'IMPACT_QUERY',
+  'ARCHITECTURE_QUERY',
+  'HISTORY_QUERY',
+  'HEALTH_QUERY',
+  'TASK_CONTEXT',
+  'CONTEXT_EXPLANATION',
+  'CONTEXT_REFRESH',
+  'KNOWLEDGE_UPDATE',
+  'EXECUTION_REPORT',
+  'VERIFICATION_REPORT',
+  'SESSION_RESUME',
+  'CONTEXT_PINNING',
+  'CONTEXT_FEEDBACK',
+  'TASK_CONTROL',
+  'TASK_READ',
+  'OBSERVATION_READ',
+  'VERIFICATION_READ',
+] as const;
+
+
+export function isAgentCapability(value: unknown): value is AgentCapability {
+  return typeof value === 'string' && AGENT_CAPABILITIES.includes(value as AgentCapability);
+}

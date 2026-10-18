@@ -1,0 +1,44 @@
+export type AdapterCapability =
+  | 'CONTEXT_RETRIEVAL'
+  | 'FEATURE_RETRIEVAL'
+  | 'IMPACT_RETRIEVAL'
+  | 'HISTORY_RETRIEVAL'
+  | 'HEALTH_RETRIEVAL'
+  | 'ARCHITECTURE_RETRIEVAL'
+  | 'CONTEXT_EXPLANATION'
+  | 'CONTEXT_REFRESH'
+  | 'EXECUTION_REPORTING'
+  | 'VERIFICATION_REPORTING'
+  | 'KNOWLEDGE_UPDATE'
+  | 'TASK_STATE'
+  | 'SESSION_STATE'
+  | 'STREAMING'
+  | 'STRUCTURED_OUTPUT'
+  | 'TOOL_CALLING'
+  | 'MCP'
+  | 'BATCH_REQUESTS';
+
+export const ADAPTER_CAPABILITIES: readonly AdapterCapability[] = [
+  'CONTEXT_RETRIEVAL',
+  'FEATURE_RETRIEVAL',
+  'IMPACT_RETRIEVAL',
+  'HISTORY_RETRIEVAL',
+  'HEALTH_RETRIEVAL',
+  'ARCHITECTURE_RETRIEVAL',
+  'CONTEXT_EXPLANATION',
+  'CONTEXT_REFRESH',
+  'EXECUTION_REPORTING',
+  'VERIFICATION_REPORTING',
+  'KNOWLEDGE_UPDATE',
+  'TASK_STATE',
+  'SESSION_STATE',
+  'STREAMING',
+  'STRUCTURED_OUTPUT',
+  'TOOL_CALLING',
+  'MCP',
+  'BATCH_REQUESTS',
+] as const;
+
+export function isAdapterCapability(value: unknown): value is AdapterCapability {
+  return typeof value === 'string' && ADAPTER_CAPABILITIES.includes(value as AdapterCapability);
+}

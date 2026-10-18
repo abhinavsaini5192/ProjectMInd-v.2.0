@@ -9,25 +9,42 @@ describe('Orchestration: Security & Approval Guards', () => {
 
     const plan: ActionPlan = {
       planId: 'plan_del_1',
+      decisionId: 'decision_del_1',
       taskId: 'task_del_1',
       objective: 'Delete deprecated database migration',
-      version: 1,
       steps: [{
         stepId: 'step_delete',
+        order: 1,
+        type: 'DELETE',
         description: 'Delete migration file',
+        reason: 'Clean up',
         target: { id: 'src/db/old.ts', type: 'FILE' },
-        action: 'DELETE',
         dependencies: [],
-        risks: [{ riskId: 'r1', type: 'DATA_LOSS', severity: 'HIGH', description: 'Irreversible deletion', mitigation: 'Backup' }]
+        preconditions: [],
+        expectedOutcome: 'File deleted',
+        riskLevel: 'HIGH',
+        validation: [],
+        reversibility: 'IRREVERSIBLE',
       }],
       dependencies: [],
       preconditions: [],
       postconditions: [],
       risks: [],
-      validationPlan: { validationId: 'v1', requiredChecks: [] },
-      estimatedTokens: 100,
+      validationPlan: {
+        validationId: 'v1',
+        steps: [],
+        requiredTests: [],
+        typeCheck: true,
+        architectureCheck: true,
+        dependencyCheck: true,
+      },
       affectedResources: ['src/db/old.ts'],
       status: 'NEEDS_APPROVAL',
+      estimatedComplexity: 'LOW',
+      confidence: 1.0,
+      knowledgeVersion: '1.0.0',
+      contextVersion: '1.0.0',
+      reasoningId: 'reasoning_del_1',
       createdAt: Date.now()
     };
 

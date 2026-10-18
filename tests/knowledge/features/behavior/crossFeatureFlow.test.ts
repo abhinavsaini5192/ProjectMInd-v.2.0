@@ -15,7 +15,7 @@ describe('Phase 6.5: Cross-Feature Architectural Boundaries', () => {
 
     const paymentMappings = [
       BehaviorTestHelper.createMapping('feat_payment', 'PaymentService.charge', 'SYMBOL', 'SERVICE'),
-      BehaviorTestHelper.createMapping('feat_payment', 'StripeClient', 'DEPENDENCY', 'PRIMARY'),
+      BehaviorTestHelper.createMapping('feat_payment', 'StripeClient', 'DEPENDENCY', 'DEPENDENCY'),
     ];
 
     const allMappings = new Map([
@@ -45,9 +45,11 @@ describe('Phase 6.5: Cross-Feature Architectural Boundaries', () => {
             timestamp: Date.now(),
           },
         ],
-        attributes: {},
+        source: 'DISCOVERED',
+        scope: { workspaceId: 'ws_test', repositoryId: 'repo_test' },
+        knowledgeVersion: '1.0.0',
+        relationshipVersion: 1,
         active: true,
-        version: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },

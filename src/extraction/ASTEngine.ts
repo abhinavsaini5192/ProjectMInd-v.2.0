@@ -1,5 +1,5 @@
-import Parser, { Tree, Node, Language } from 'web-tree-sitter';
-import { ProjectMindError } from '../errors';
+import { Parser, Tree, Node, Language } from 'web-tree-sitter';
+import { ProjectMindError } from '../errors/index.js';
 
 /**
  * Handles initialization of the WebAssembly-based Tree-sitter engine.

@@ -1,6 +1,6 @@
 import { StorageProviderType } from '../types/StorageTypes';
-import { IStorageProvider } from './IStorageProvider';
-import { StorageContext } from '../models/StorageContext';
+import type { IStorageProvider } from './IStorageProvider';
+import type { StorageContext } from '../models/StorageContext';
 
 export interface IStorageFactory {
   /**

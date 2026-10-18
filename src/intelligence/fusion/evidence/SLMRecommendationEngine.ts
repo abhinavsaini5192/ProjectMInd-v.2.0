@@ -1,7 +1,7 @@
-import { EvidencePackage } from './EvidencePackageBuilder';
-import { SLMGateway } from '../../slm/core/SLMGateway';
-import { SLMRequest } from '../../slm/models/SLMRequest';
-import { SLMTaskType } from '../../slm/models/SLMTaskType';
+import { EvidencePackage } from './EvidencePackageBuilder.js';
+import { SLMGateway } from '../../slm/core/SLMGateway.js';
+import { SLMRequest } from '../../slm/models/SLMRequest.js';
+import { SLMTaskType } from '../../slm/models/SLMTaskType.js';
 
 export class SLMRecommendationEngine {
   constructor(private gateway: SLMGateway) {}

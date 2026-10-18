@@ -12,13 +12,16 @@ export interface FeatureBehaviorStatistics {
 
 export interface FeatureBehaviorResult {
   runId: string;
-  startedAt: number;
-  completedAt: number;
-  durationMs: number;
+  featureId?: string;
+  flows?: any[];
+  startedAt?: number;
+  completedAt?: number;
+  durationMs?: number;
   behaviors: FeatureBehavior[];
   newBehaviors: FeatureBehavior[];
   updatedBehaviors: FeatureBehavior[];
   staleBehaviors: FeatureBehavior[];
   conflicts: FeatureBehaviorConflict[];
   statistics: FeatureBehaviorStatistics;
+  [key: string]: any;
 }

@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
-import { WorkspaceDirectory } from './models/WorkspaceDirectory';
+import type { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
+import type { WorkspaceDirectory } from './models/WorkspaceDirectory';
 import { DirectoryOperationError } from './types/FilesystemErrors';
 import { FilesystemValidator } from './validators/FilesystemValidator';
 

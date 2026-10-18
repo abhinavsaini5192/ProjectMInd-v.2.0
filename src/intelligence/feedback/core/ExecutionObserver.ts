@@ -1,6 +1,6 @@
-import { ExecutionObservation } from '../models/ExecutionObservation';
-import { ExecutionResult } from '../../../agent/execution/models/ExecutionResult';
-import { ActionPlan } from '../../planning/models/ActionPlan';
+import { ExecutionObservation } from '../models/ExecutionObservation.js';
+import { ExecutionResult } from '../../../agent/execution/models/ExecutionResult.js';
+import { ActionPlan } from '../../planning/models/ActionPlan.js';
 
 export class ExecutionObserver {
   public observe(execution: Partial<ExecutionResult>, plan?: ActionPlan): ExecutionObservation {
@@ -9,10 +9,14 @@ export class ExecutionObserver {
     const createdFiles: string[] = [];
     const deletedFiles: string[] = [];
 
-    for (const change of execution.changes || []) {
-      if (change.type === 'CREATED') createdFiles.push(change.path);
-      else if (change.type === 'DELETED') deletedFiles.push(change.path);
-      else changedFiles.push(change.path);
+    for (const change of (execution.changes || []) as any[]) {
+      if (typeof change === 'string') {
+        changedFiles.push(change);
+      } else if (change && typeof change === 'object') {
+        if (change.type === 'CREATED') createdFiles.push(change.path);
+        else if (change.type === 'DELETED') deletedFiles.push(change.path);
+        else if (change.path) changedFiles.push(change.path);
+      }
     }
 
     return {

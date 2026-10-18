@@ -46,7 +46,7 @@ export class HealthTestHelper {
     featureId: string,
     resourceId: string,
     resourceType: MappingResourceType = 'FILE',
-    role: MappingRole = 'PRIMARY',
+    role: MappingRole = 'IMPLEMENTATION',
     metadata: Record<string, unknown> = {}
   ): FeatureResourceMapping {
     return {
@@ -78,9 +78,9 @@ export class HealthTestHelper {
       dependencyId: `dep_${dependentFeatureId}_${providerFeatureId}`,
       dependentFeatureId,
       providerFeatureId,
-      type: 'CALLS',
+      type: 'DEPENDS_ON',
       strength,
-      confidence: 'HIGH',
+      confidence: { level: 'HIGH', score: 0.8, reasons: ['Test dependency'] },
       isDirect: true,
       evidenceCount: 2
     };
@@ -89,10 +89,14 @@ export class HealthTestHelper {
   public static createCycle(path: string[]): FeatureDependencyCycle {
     return {
       cycleId: `cycle_${path.join('_')}`,
+      features: path,
       cyclePath: path,
       length: path.length,
-      severity: 'CRITICAL',
-      detectedAt: Date.now()
+      relationships: [],
+      confidence: 0.9,
+      evidence: [],
+      classification: 'VALIDATED_CYCLE',
+      createdAt: Date.now()
     };
   }
 
@@ -100,7 +104,7 @@ export class HealthTestHelper {
     featureId: string,
     flowId: string,
     name: string,
-    flowType: FeatureFlowType = 'PROCESS',
+    flowType: FeatureFlowType = 'PRIMARY',
     stepCount: number = 3,
     options?: { isVerified?: boolean; hasErrorStep?: boolean; isUnterminated?: boolean }
   ): FeatureFlow {
@@ -137,23 +141,36 @@ export class HealthTestHelper {
   }
 
   public static createBehaviorResult(featureId: string, flows: FeatureFlow[]): FeatureBehaviorResult {
+    const behavior = {
+      behaviorId: `beh_${featureId}`,
+      featureId,
+      flows,
+      summary: { flowCount: flows.length, complexityScore: 20 },
+      scope: { workspaceId: 'ws_test', repositoryId: 'repo_test' },
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      version: 1,
+      active: true
+    } as any;
     return {
       runId: `run_${Date.now()}`,
       featureId,
       flows,
-      behavior: {
-        behaviorId: `beh_${featureId}`,
-        featureId,
-        flows,
-        summary: { flowCount: flows.length, complexityScore: 20 },
-        scope: { workspaceId: 'ws_test', repositoryId: 'repo_test' },
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        version: 1,
-        active: true
-      } as any,
-      candidates: [],
+      behaviors: [behavior],
+      newBehaviors: [behavior],
+      updatedBehaviors: [],
+      staleBehaviors: [],
       conflicts: [],
+      statistics: {
+        flowsEvaluated: flows.length,
+        nodesCreated: 0,
+        edgesCreated: 0,
+        conflictsDetected: 0,
+        featuresAnalyzed: 1,
+        pathsComputed: 0,
+      },
+      behavior,
+      candidates: [],
       paths: [],
       summary: {
         flowCount: flows.length,

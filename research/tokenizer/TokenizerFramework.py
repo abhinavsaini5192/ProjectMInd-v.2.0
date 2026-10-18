@@ -1,14 +1,18 @@
 class TokenizerFramework:
-    """Wraps HuggingFace tokenizers or custom implementations for repository data."""
+    """Character ordinal encoder used as a deterministic prototype for token counting workflows.
+    
+    NOTE: Real BPE/WordPiece/SentencePiece neural tokenization (HuggingFace transformers)
+    is not bundled in this offline prototype. It maps characters directly to Unicode ordinals.
+    """
 
     def __init__(self, model_name_or_path: str = "gpt2"):
         self.model_name_or_path = model_name_or_path
-        # In a real environment:
+        # In a production environment with torch/transformers installed:
         # from transformers import AutoTokenizer
         # self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
 
     def encode(self, text: str) -> list:
-        # Stub encoding
+        # Deterministic character ordinal encoding
         return [ord(c) for c in text]
 
     def decode(self, tokens: list) -> str:

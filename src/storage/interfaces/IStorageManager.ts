@@ -1,5 +1,5 @@
 import { StorageProviderType } from '../types/StorageTypes';
-import { IStorageProvider } from './IStorageProvider';
+import type { IStorageProvider } from './IStorageProvider';
 
 export interface IStorageManager {
   /**

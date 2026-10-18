@@ -1,5 +1,5 @@
-import { KnowledgeGraph } from '../../intelligence/engines/KnowledgeGraphBuilder';
-import { Fact } from '../../extraction/models/Fact';
+import type { KnowledgeGraph } from '../../intelligence/engines/KnowledgeGraphBuilder.js';
+import type { Fact } from '../../extraction/models/Fact.js';
 
 export class KnowledgeRetriever {
   private graph: KnowledgeGraph;

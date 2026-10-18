@@ -4,5 +4,6 @@ export enum FeatureType {
   PLATFORM = 'PLATFORM',
   CROSS_CUTTING = 'CROSS_CUTTING',
   INTERNAL = 'INTERNAL',
+  CORE = 'CORE',
   UNKNOWN = 'UNKNOWN'
 }

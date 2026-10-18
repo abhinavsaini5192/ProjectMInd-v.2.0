@@ -1,9 +1,9 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { LockType } from './types/FilesystemTypes';
-import { WorkspaceLock } from './models/WorkspaceLock';
+import type { WorkspaceLock } from './models/WorkspaceLock';
 import { LockTimeoutError } from './types/FilesystemErrors';
-import { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
+import type { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
 
 export class WorkspaceLockManager {
   private readonly LOCK_TIMEOUT_MS = 30000;

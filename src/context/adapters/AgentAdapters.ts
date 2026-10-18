@@ -1,4 +1,4 @@
-import { ContextPackage } from '../models/ContextModels';
+import type { ContextPackage } from '../models/ContextModels.js';
 
 export interface AgentAdapter {
   formatContext(pkg: ContextPackage): string;

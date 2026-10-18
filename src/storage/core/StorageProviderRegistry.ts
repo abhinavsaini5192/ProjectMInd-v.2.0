@@ -1,4 +1,4 @@
-import { IStorageProvider } from '../interfaces/IStorageProvider';
+import type { IStorageProvider } from '../interfaces/IStorageProvider';
 import { StorageProviderType } from '../types/StorageTypes';
 import { ProviderRegistrationError } from '../types/StorageErrors';
 

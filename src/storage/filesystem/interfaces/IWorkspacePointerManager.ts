@@ -1,4 +1,4 @@
-import { WorkspacePointer } from '../models/WorkspacePointer';
+import type { WorkspacePointer } from '../models/WorkspacePointer';
 
 export interface IWorkspacePointerManager {
   readPointer(repositoryPath: string): Promise<WorkspacePointer | null>;

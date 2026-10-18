@@ -1,8 +1,8 @@
-import { WorkspaceService } from './services/WorkspaceService';
-import { RegistryService } from './services/RegistryService';
-import { HealthService } from './services/HealthService';
-import { ConfigurationService } from './services/ConfigurationService';
-import { LifecycleService } from './services/LifecycleService';
+import { WorkspaceService } from '../services/WorkspaceService.js';
+import { RegistryService } from '../services/RegistryService.js';
+import { HealthService } from '../services/HealthService.js';
+import { ConfigurationService } from '../services/ConfigurationService.js';
+import { LifecycleService } from '../services/LifecycleService.js';
 
 /**
  * The WorkspaceAPI is the ONLY public interface for ProjectMind runtime modules.

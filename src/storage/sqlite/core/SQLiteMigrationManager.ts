@@ -1,5 +1,5 @@
-import { SQLiteConnectionManager } from './SQLiteConnectionManager';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
+import { SQLiteConnectionManager } from './SQLiteConnectionManager.js';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
 
 export class SQLiteMigrationManager {
   constructor(
@@ -40,7 +40,6 @@ export class SQLiteMigrationManager {
       component: 'SQLiteMigrationManager',
       operation: 'applyMigration',
       message: `Applied migration v${version}: ${name}`,
-      severity: 'INFO'
     });
   }
 }

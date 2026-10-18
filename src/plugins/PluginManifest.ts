@@ -98,7 +98,7 @@ export function validateManifest(manifestRaw: unknown): PluginManifest {
   const result = PluginManifestSchema.safeParse(manifestRaw);
   if (!result.success) {
     throw new ManifestValidationError(
-      `Manifest validation failed: ${result.error.errors.map(e => e.message).join(', ')}`
+      `Manifest validation failed: ${result.error.issues.map((e) => e.message).join(', ')}`
     );
   }
   return result.data;

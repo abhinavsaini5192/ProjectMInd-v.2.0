@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: projectmind-schema-migration
+  namespace: projectmind
+  labels:
+    app.kubernetes.io/name: projectmind
+    app.kubernetes.io/component: migration
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 300
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: projectmind
+        app.kubernetes.io/component: migration
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: schema-migrator
+          image: projectmind:latest
+          imagePullPolicy: IfNotPresent
+          command: ["dumb-init", "--", "node", "dist/platform/main.js", "--role=migration"]
+          envFrom:
+            - configMapRef:
+                name: projectmind-config
+            - secretRef:
+                name: projectmind-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: storage-data
+              mountPath: /app/.projectmind/data
+      volumes:
+        - name: storage-data
+          persistentVolumeClaim:
+            claimName: projectmind-data-pvc

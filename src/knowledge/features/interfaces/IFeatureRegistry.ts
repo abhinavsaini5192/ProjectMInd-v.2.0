@@ -1,10 +1,11 @@
-import { Feature } from '../models/Feature';
-import { FeatureId } from '../models/FeatureId';
-import { FeatureType } from '../models/FeatureType';
-import { FeatureStatus } from '../models/FeatureStatus';
+import { Feature } from '../models/Feature.js';
+import { IFeature } from '../models/IFeature.js';
+import { FeatureId } from '../models/FeatureId.js';
+import { FeatureType } from '../models/FeatureType.js';
+import { FeatureStatus } from '../models/FeatureStatus.js';
 
 export interface IFeatureRegistry {
-  register(feature: Feature): Promise<void>;
+  register(feature: Feature | IFeature): Promise<void>;
   get(id: FeatureId): Promise<Feature | null>;
   has(id: FeatureId): Promise<boolean>;
   update(feature: Feature): Promise<void>;

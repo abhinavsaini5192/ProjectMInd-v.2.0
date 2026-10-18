@@ -1,9 +1,20 @@
-import { IAgent } from './IAgent';
-import { AgentTask } from '../models/AgentTask';
-import { AgentResult } from '../models/AgentResult';
+import type { Agent, AgentRegistrationParams } from '../models/Agent.js';
+import type { AgentSession, AgentSessionCreateParams } from '../models/AgentSession.js';
+import type { AgentRequest } from '../models/AgentRequest.js';
+import type { AgentResponse } from '../models/AgentResponse.js';
 
+/**
+ * Phase 7.1 Agent Integration Runtime Interface.
+ */
 export interface IAgentRuntime {
-  createAgent(repositoryId: string): IAgent;
-  executeTask(task: AgentTask): Promise<AgentResult>;
-  getAgent(agentId: string): IAgent | undefined;
+  registerAgent(params: AgentRegistrationParams): Promise<Agent>;
+  deregisterAgent(agentId: string): Promise<boolean>;
+  getAgent(agentId: string): Promise<Agent | undefined>;
+  listAgents(): Promise<Agent[]>;
+  createSession(params: AgentSessionCreateParams): Promise<AgentSession>;
+  getSession(sessionId: string): Promise<AgentSession | undefined>;
+  closeSession(sessionId: string): Promise<boolean>;
+  executeOperation<TPayload = unknown, TData = unknown>(
+    request: AgentRequest<TPayload>
+  ): Promise<AgentResponse<TData>>;
 }

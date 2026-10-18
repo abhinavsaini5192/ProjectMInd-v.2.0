@@ -1,5 +1,5 @@
-import { AgentTask } from '../models/AgentTask';
-import { ContextPackage } from '../../intelligence/fusion/models/ContextPackage';
+import type { AgentTask } from '../models/AgentTask.js';
+import type { ContextPackage } from '../../intelligence/fusion/models/ContextPackage.js';
 
 export interface IBrainGateway {
   /**

@@ -1,4 +1,4 @@
-import { ProjectMindKernel } from '../kernel/ProjectMindKernel';
+import type { ProjectMindKernel } from '../kernel/ProjectMindKernel.js';
 
 export interface Command {
   name: string;
@@ -6,6 +6,10 @@ export interface Command {
   execute(args: string[], kernel: ProjectMindKernel): Promise<void>;
 }
 
+/**
+ * Legacy router maintained for backward compatibility.
+ * Modern CLI execution uses CLIApplication.
+ */
 export class CommandRouter {
   private commands: Map<string, Command> = new Map();
 
@@ -15,14 +19,14 @@ export class CommandRouter {
 
   public async route(args: string[], kernel: ProjectMindKernel): Promise<void> {
     const commandName = args[0];
-    
+
     if (!commandName || commandName === 'help') {
       this.printHelp();
       return;
     }
 
     const command = this.commands.get(commandName);
-    
+
     if (command) {
       await command.execute(args.slice(1), kernel);
     } else {
@@ -31,7 +35,7 @@ export class CommandRouter {
     }
   }
 
-  private printHelp(): void {
+  public printHelp(): void {
     console.log(`\nProjectMind CLI\n\nUsage: projectmind <command> [args]\n\nCommands:`);
     for (const cmd of this.commands.values()) {
       console.log(`  ${cmd.name.padEnd(15)} ${cmd.description}`);

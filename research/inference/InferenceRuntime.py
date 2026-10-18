@@ -1,11 +1,14 @@
 class InferenceRuntime:
-    """Local inference wrapper to test models before exporting them."""
+    """Simulated local inference wrapper to test pipelines before model weights exist.
+    
+    NOTE: Real GGUF/ONNX/Torch model inference is not implemented. Returns a simulated string.
+    """
     
     def __init__(self, model_path: str):
         self.model_path = model_path
-        print(f"Loading model from {model_path} into Inference Runtime...")
+        print(f"Configuring simulated inference runtime for model path: {model_path}...")
         
     def generate(self, prompt: str) -> str:
-        # Stub logic
-        print(f"Generating inference for prompt: {prompt[:30]}...")
+        # Simulated placeholder output
+        print(f"Generating simulated inference for prompt: {prompt[:30]}...")
         return "Simulated model output for repository intelligence."

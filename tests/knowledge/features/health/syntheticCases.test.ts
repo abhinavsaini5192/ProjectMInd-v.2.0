@@ -12,7 +12,7 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
     });
     const epMap = HealthTestHelper.createMapping('feat_auth_c1', '/api/auth/login', 'ENDPOINT');
     const unitTest = HealthTestHelper.createMapping('feat_auth_c1', 'tests/auth.test.ts', 'FILE', 'TEST');
-    const authGuard = HealthTestHelper.createMapping('feat_auth_c1', 'src/auth/jwtGuard.ts', 'FILE', 'PRIMARY');
+    const authGuard = HealthTestHelper.createMapping('feat_auth_c1', 'src/auth/jwtGuard.ts', 'FILE', 'IMPLEMENTATION');
     const dep1 = HealthTestHelper.createDependency('feat_checkout', 'feat_auth_c1');
     const dep2 = HealthTestHelper.createDependency('feat_admin', 'feat_auth_c1');
 
@@ -33,7 +33,7 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
     const paymentFeature = HealthTestHelper.createFeature('feat_payment_c2', 'Payment Processing', {
       type: 'CORE'
     });
-    const stripeMap = HealthTestHelper.createMapping('feat_payment_c2', 'src/stripeClient.ts', 'FILE', 'PRIMARY', {
+    const stripeMap = HealthTestHelper.createMapping('feat_payment_c2', 'src/stripeClient.ts', 'FILE', 'INTEGRATION', {
       isExternalIntegration: true,
       hasTimeout: false
     });
@@ -60,7 +60,7 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
   // Case 3: God Feature / High Complexity (35 Cyclomatic Complexity, Deep Nesting, Large LOC)
   it('Case 3: God Feature — 35 cyclomatic complexity, deep nesting, 1200 LOC', async () => {
     const godFeature = HealthTestHelper.createFeature('feat_god_c3', 'OmniService');
-    const godFile = HealthTestHelper.createMapping('feat_god_c3', 'src/OmniService.ts', 'FILE', 'PRIMARY', {
+    const godFile = HealthTestHelper.createMapping('feat_god_c3', 'src/OmniService.ts', 'FILE', 'IMPLEMENTATION', {
       cyclomaticComplexity: 35,
       nestingDepth: 8,
       linesOfCode: 1400
@@ -121,7 +121,7 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
   // Case 6: Deprecated Dependency Feature (Uses Deprecated/Unpinned Packages)
   it('Case 6: Deprecated Dependency Feature — relies on deprecated external package', async () => {
     const depFeature = HealthTestHelper.createFeature('feat_dep_c6', 'Legacy Serializer');
-    const libMap = HealthTestHelper.createMapping('feat_dep_c6', 'npm:legacy-xml', 'DEPENDENCY', 'PRIMARY', {
+    const libMap = HealthTestHelper.createMapping('feat_dep_c6', 'npm:legacy-xml', 'DEPENDENCY', 'DEPENDENCY', {
       isDeprecated: true,
       isUnpinned: true
     });
@@ -186,7 +186,7 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
   // Case 9: Insecure Configuration / Exposed Secret (Hardcoded Secret & Permissive CORS)
   it('Case 9: Insecure Configuration — hardcoded API key and wildcard CORS', async () => {
     const secFeature = HealthTestHelper.createFeature('feat_sec_c9', 'Integration API');
-    const cfgMap = HealthTestHelper.createMapping('feat_sec_c9', 'src/config.ts', 'CONFIGURATION', 'PRIMARY', {
+    const cfgMap = HealthTestHelper.createMapping('feat_sec_c9', 'src/config.ts', 'CONFIGURATION', 'CONFIGURATION', {
       rawContent: 'SECRET_API_TOKEN = "test_secret_token_123456789"',
       permissiveCors: true
     });
@@ -207,14 +207,14 @@ describe('Phase 6.6 Section 50: 10 Mandatory Synthetic Test Cases', () => {
   // Case 10: Pristine Healthy Feature (Comprehensive Tests, No Circulars, Low Churn -> HEALTHY)
   it('Case 10: Pristine Healthy Feature — comprehensive tests, clean architecture, HEALTHY status', async () => {
     const pristineFeature = HealthTestHelper.createFeature('feat_pristine_c10', 'Telemetry Metrics');
-    const codeMap = HealthTestHelper.createMapping('feat_pristine_c10', 'src/metrics.ts', 'FILE', 'PRIMARY', {
+    const codeMap = HealthTestHelper.createMapping('feat_pristine_c10', 'src/metrics.ts', 'FILE', 'IMPLEMENTATION', {
       cyclomaticComplexity: 5,
       linesOfCode: 120
     });
     const unitTest = HealthTestHelper.createMapping('feat_pristine_c10', 'tests/metrics.unit.test.ts', 'FILE', 'TEST');
     const intTest = HealthTestHelper.createMapping('feat_pristine_c10', 'tests/metrics.integration.test.ts', 'FILE', 'TEST');
     const dep = HealthTestHelper.createDependency('feat_pristine_c10', 'feat_logger', 0.2);
-    const flow = HealthTestHelper.createFlow('feat_pristine_c10', 'flow_metric', 'Record Metric', 'PROCESS', 3, {
+    const flow = HealthTestHelper.createFlow('feat_pristine_c10', 'flow_metric', 'Record Metric', 'PRIMARY', 3, {
       isVerified: true
     });
 

@@ -5,6 +5,7 @@ import { ConfidenceLevel } from '../models/SemanticModels';
  * A mock adapter used exclusively for deterministic testing and CI/CD.
  */
 export class MockLLMAdapter implements LLMAdapter {
+  public readonly isMock: boolean = true;
   private mockResponses: Map<string, any> = new Map();
 
   /**

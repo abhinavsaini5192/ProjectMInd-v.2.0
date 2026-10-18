@@ -1,0 +1,16 @@
+export const KnowledgeUpdateTokens = {
+  Repository: Symbol.for('IKnowledgeUpdateRepository'),
+  Normalizer: Symbol.for('KnowledgeUpdateNormalizer'),
+  Deduplicator: Symbol.for('KnowledgeUpdateDeduplicator'),
+  Validator: Symbol.for('IKnowledgeUpdateValidator'),
+  ImpactResolver: Symbol.for('IKnowledgeImpactResolver'),
+  Planner: Symbol.for('IKnowledgeUpdatePlanner'),
+  Executor: Symbol.for('IKnowledgeUpdateExecutor'),
+  Processor: Symbol.for('IKnowledgeUpdateProcessor'),
+  VersionManager: Symbol.for('IKnowledgeVersionManager'),
+  InvalidationManager: Symbol.for('IKnowledgeInvalidationManager'),
+  RefreshManager: Symbol.for('IKnowledgeRefreshManager'),
+  RunManager: Symbol.for('KnowledgeUpdateRunManager'),
+  Explainer: Symbol.for('IKnowledgeUpdateExplainer'),
+  Coordinator: Symbol.for('IKnowledgeUpdateCoordinator'),
+} as const;

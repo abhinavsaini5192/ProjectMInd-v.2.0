@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
+import type { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
 import { FileOperationError } from './types/FilesystemErrors';
 import { FilesystemUtils } from './utils/FilesystemUtils';
 

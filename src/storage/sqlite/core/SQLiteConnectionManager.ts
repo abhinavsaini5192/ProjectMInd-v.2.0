@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
-import { StorageCoreError } from '../../types/StorageErrors';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
+import { StorageCoreError } from '../../types/StorageErrors.js';
 
 export class SQLiteConnectionManager {
   private db: Database.Database | null = null;
@@ -23,15 +23,13 @@ export class SQLiteConnectionManager {
         component: 'SQLiteConnectionManager',
         operation: 'open',
         message: `Opened connection to ${this.databasePath}`,
-        severity: 'INFO'
       });
     } catch (error: any) {
       this.logger.error({
         component: 'SQLiteConnectionManager',
         operation: 'open',
         message: `Failed to open ${this.databasePath}`,
-        severity: 'ERROR',
-        details: { error: error.message }
+        details: { error: error.message },
       });
       throw new StorageCoreError(`Failed to open database: ${error.message}`);
     }
@@ -47,7 +45,6 @@ export class SQLiteConnectionManager {
         component: 'SQLiteConnectionManager',
         operation: 'close',
         message: `Closed connection to ${this.databasePath}`,
-        severity: 'INFO'
       });
     } catch (error: any) {
       throw new StorageCoreError(`Failed to close database: ${error.message}`);

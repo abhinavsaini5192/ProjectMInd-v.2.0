@@ -1,4 +1,4 @@
-import { WorkspaceDirectory } from '../models/WorkspaceDirectory';
+import type { WorkspaceDirectory } from '../models/WorkspaceDirectory';
 
 export interface IWorkspaceDirectoryManager {
   ensureDirectory(path: string): Promise<WorkspaceDirectory>;

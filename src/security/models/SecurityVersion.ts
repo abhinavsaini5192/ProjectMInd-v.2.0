@@ -1,0 +1,2 @@
+export const SECURITY_SCHEMA_VERSION = '1.0.0';
+export const DEFAULT_SECURITY_POLICY_VERSION = '1.0.0';

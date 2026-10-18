@@ -1,4 +1,4 @@
-import { WorkspacePointer } from '../models/WorkspacePointer';
+import type { WorkspacePointer } from '../models/WorkspacePointer';
 import { WorkspaceType } from '../types/FilesystemTypes';
 
 export class WorkspaceValidator {

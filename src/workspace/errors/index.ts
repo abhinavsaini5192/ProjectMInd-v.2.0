@@ -14,8 +14,16 @@ export abstract class ProjectMindError extends Error {
 }
 
 export class WorkspaceError extends ProjectMindError {
+  constructor(message: string, codeOrDetails?: string | Record<string, any>, details?: Record<string, any>) {
+    const code = typeof codeOrDetails === 'string' ? codeOrDetails : 'ERR_WORKSPACE';
+    const finalDetails = typeof codeOrDetails === 'object' && codeOrDetails !== null ? codeOrDetails : details;
+    super(message, code, finalDetails);
+  }
+}
+
+export class WorkspaceNotFoundError extends WorkspaceError {
   constructor(message: string, details?: Record<string, any>) {
-    super(message, 'ERR_WORKSPACE', details);
+    super(message, 'ERR_WORKSPACE_NOT_FOUND', details);
   }
 }
 

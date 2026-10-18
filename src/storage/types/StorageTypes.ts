@@ -4,7 +4,9 @@ export enum StorageProviderType {
   Memory = 'memory',
   Vector = 'vector',
   Cache = 'cache',
-  Filesystem = 'filesystem'
+  Filesystem = 'filesystem',
+  Metadata = 'metadata',
+  Settings = 'settings'
 }
 
 export enum ProviderState {

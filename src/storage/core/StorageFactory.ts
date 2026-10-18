@@ -1,10 +1,10 @@
-import { IStorageFactory } from '../interfaces/IStorageFactory';
-import { IStorageProvider } from '../interfaces/IStorageProvider';
+import type { IStorageFactory } from '../interfaces/IStorageFactory';
+import type { IStorageProvider } from '../interfaces/IStorageProvider';
 import { StorageProviderType } from '../types/StorageTypes';
-import { StorageContext } from '../models/StorageContext';
+import type { StorageContext } from '../models/StorageContext';
 import { StorageProviderRegistry } from './StorageProviderRegistry';
 import { ProviderResolutionError } from '../types/StorageErrors';
-import { ILogger } from '../../workspace/interfaces/ILogger';
+import type { ILogger } from '../../workspace/interfaces/ILogger';
 
 export class StorageFactory implements IStorageFactory {
   constructor(
@@ -19,7 +19,6 @@ export class StorageFactory implements IStorageFactory {
         component: 'StorageFactory',
         operation: 'getProviderByName',
         message: `Provider '${name}' not found.`,
-        severity: 'ERROR',
         details: { context }
       });
       throw new ProviderResolutionError(`Storage provider '${name}' is not registered.`);
@@ -34,7 +33,6 @@ export class StorageFactory implements IStorageFactory {
         component: 'StorageFactory',
         operation: 'getProviderByType',
         message: `No default provider found for type '${type}'.`,
-        severity: 'ERROR',
         details: { context }
       });
       throw new ProviderResolutionError(`No storage provider registered for type '${type}'.`);
@@ -43,4 +41,4 @@ export class StorageFactory implements IStorageFactory {
   }
 }
 
-export const IStorageFactoryToken = Symbol('StorageFactory');
+export { IStorageFactoryToken } from '../interfaces/IStorageFactory';

@@ -1,6 +1,6 @@
-import { IWorkspacePointerManager } from './interfaces/IWorkspacePointerManager';
-import { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
-import { WorkspacePointer } from './models/WorkspacePointer';
+import type { IWorkspacePointerManager } from './interfaces/IWorkspacePointerManager';
+import type { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
+import type { WorkspacePointer } from './models/WorkspacePointer';
 import { PointerFileError } from './types/FilesystemErrors';
 import { WorkspaceValidator } from './validators/WorkspaceValidator';
 import { PathResolver } from './utils/PathResolver';

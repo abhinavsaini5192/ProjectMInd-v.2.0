@@ -7,7 +7,7 @@ import { ModelRecord } from '../registry/ModelRecord';
 export interface ISLMProvider {
   generate(request: SLMRequest): Promise<SLMResponse>;
   healthCheck(): Promise<boolean>;
-  getCapabilities(): Promise<SLMCapabilities>;
+  getCapabilities(): Promise<SLMCapabilities> | SLMCapabilities;
   getMetadata(): Promise<ModelMetadata>;
   listModels(): Promise<ModelRecord[]>;
 }

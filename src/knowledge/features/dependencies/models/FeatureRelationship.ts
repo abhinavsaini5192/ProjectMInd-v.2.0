@@ -12,9 +12,11 @@ export interface FeatureRelationship {
   sourceFeatureId: FeatureId;
   targetFeatureId: FeatureId;
   relationshipType: FeatureRelationshipType;
+  type?: FeatureRelationshipType;
   direction: FeatureRelationshipDirection;
   confidence: FeatureRelationshipConfidence;
   score: number;
+  strength?: number;
   evidence: FeatureRelationshipEvidence[];
   source: RelationshipSource;
   scope: FeatureScope;

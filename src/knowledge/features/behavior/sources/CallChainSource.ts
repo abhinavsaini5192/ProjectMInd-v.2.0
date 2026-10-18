@@ -35,7 +35,7 @@ export class CallChainSource implements IFeatureBehaviorSource {
           targetFeatureId: boundary.targetFeatureId,
           role: m.role,
         },
-        m.confidence || 0.85
+        m.score ?? 0.85
       );
       classifiedNodes.push(node);
     }

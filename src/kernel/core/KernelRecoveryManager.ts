@@ -1,6 +1,6 @@
-import { KernelEventDispatcher } from './KernelEventDispatcher';
-import { KernelEventType } from '../types/KernelEvents';
-import { ILogger } from '../../workspace/interfaces/ILogger';
+import { KernelEventDispatcher } from './KernelEventDispatcher.js';
+import { KernelEventType } from '../types/KernelEvents.js';
+import { ILogger } from '../../workspace/interfaces/ILogger.js';
 
 export class KernelRecoveryManager {
   constructor(private dispatcher: KernelEventDispatcher, private logger: ILogger) {}
@@ -22,7 +22,7 @@ export class KernelRecoveryManager {
         component: 'KernelRecoveryManager',
         operation: 'recoverFromCrash',
         message: 'Recovery failed. System state is unstable.',
-        severity: 'CRITICAL',
+        severity: 'FATAL',
         details: { error: e.message }
       });
     }

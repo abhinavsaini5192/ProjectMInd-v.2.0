@@ -1,0 +1,36 @@
+export type FeatureTrendType =
+  | 'GROWING'
+  | 'SHRINKING'
+  | 'STABLE'
+  | 'INCREASING_COMPLEXITY'
+  | 'INCREASING_COUPLING'
+  | 'IMPROVING_HEALTH'
+  | 'DECLINING_HEALTH'
+  | 'INCREASING_RISK'
+  | 'DECLINING_RISK'
+  | 'INCREASING_CRITICALITY'
+  | 'INCREASING_STABILITY'
+  | 'DECREASING_STABILITY'
+  | 'INCREASING_VERIFICATION'
+  | 'UNKNOWN';
+
+export const FEATURE_TREND_TYPES: readonly FeatureTrendType[] = [
+  'GROWING',
+  'SHRINKING',
+  'STABLE',
+  'INCREASING_COMPLEXITY',
+  'INCREASING_COUPLING',
+  'IMPROVING_HEALTH',
+  'DECLINING_HEALTH',
+  'INCREASING_RISK',
+  'DECLINING_RISK',
+  'INCREASING_CRITICALITY',
+  'INCREASING_STABILITY',
+  'DECREASING_STABILITY',
+  'INCREASING_VERIFICATION',
+  'UNKNOWN',
+] as const;
+
+export function isFeatureTrendType(value: unknown): value is FeatureTrendType {
+  return typeof value === 'string' && FEATURE_TREND_TYPES.includes(value as FeatureTrendType);
+}

@@ -1,4 +1,4 @@
-import { ASTChange, GenericASTNode } from '../models/RepositoryChange';
+import { ASTChange, GenericASTNode } from '../models/RepositoryChange.js';
 
 export class RepositoryScanner {
   /**

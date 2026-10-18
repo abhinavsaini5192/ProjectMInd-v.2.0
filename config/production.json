@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "projectmind",
+    "version": "1.0.0",
+    "env": "production",
+    "logLevel": "INFO"
+  },
+  "runtime": {
+    "enabled": true,
+    "maxConcurrentSessions": 25,
+    "maxConcurrentTasks": 50,
+    "sessionTimeoutMs": 3600000,
+    "taskTimeoutMs": 1800000,
+    "toolTimeoutMs": 30000,
+    "contextTimeoutMs": 30000,
+    "recoveryTimeoutMs": 60000,
+    "shutdownTimeoutMs": 15000,
+    "contextRefreshPolicy": "ON_NEXT_REQUEST"
+  },
+  "storage": {
+    "type": "sqlite",
+    "location": ".projectmind/data",
+    "maxPayloadSizeBytes": 10485760
+  },
+  "cache": {
+    "enabled": true,
+    "type": "memory",
+    "maxCacheSizeMb": 2048,
+    "ttlMs": 3600000
+  },
+  "observability": {
+    "logFormat": "json",
+    "telemetryEnabled": true,
+    "metricsEnabled": true,
+    "secretRedactionEnabled": true
+  },
+  "agent": {
+    "runtimeEnabled": true,
+    "adaptersEnabled": true
+  },
+  "security": {
+    "allowUnsafeDevDefaults": false,
+    "authMode": "none"
+  }
+}

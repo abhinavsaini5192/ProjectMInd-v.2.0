@@ -22,13 +22,13 @@ export class LocalHTTPProvider implements ISLMProvider {
     try {
       // Mock fetch implementation since we don't have a real server
       // In reality: const res = await fetch(this.config.endpoint, { ... })
-      if (request.userInput.includes('timeout')) {
+      if (request.userInput?.includes('timeout')) {
          throw new DOMException('The operation was aborted.', 'AbortError');
       }
-      if (request.userInput.includes('unavailable')) {
+      if (request.userInput?.includes('unavailable')) {
          throw new TypeError('fetch failed');
       }
-      if (request.userInput.includes('malformed')) {
+      if (request.userInput?.includes('malformed')) {
          throw new SLMResponseError('Invalid JSON', 'local', '{bad}');
       }
 
@@ -54,7 +54,18 @@ export class LocalHTTPProvider implements ISLMProvider {
   }
 
   async healthCheck(): Promise<boolean> {
-    return true;
+    if (!this.config.endpoint) return false;
+    try {
+      const endpoint = this.config.endpoint.replace(/\/+$/, '');
+      const url = `${endpoint}/health`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), Math.min(this.config.timeout || 1000, 2000));
+      const res = await fetch(url, { method: 'GET', signal: controller.signal });
+      clearTimeout(timeoutId);
+      return res.ok;
+    } catch {
+      return false;
+    }
   }
 
   async getCapabilities(): Promise<SLMCapabilities> {
@@ -74,11 +85,17 @@ export class LocalHTTPProvider implements ISLMProvider {
       provider: 'local',
       modelName: this.config.model,
       contextWindow: this.config.contextWindow,
-      capabilities: await this.getCapabilities()
+      capabilities: await this.getCapabilities(),
+      runtimeInfo: {
+        endpoint: this.config.endpoint,
+        isNeural: false,
+        isLocalHTTP: true
+      }
     };
   }
 
   async listModels(): Promise<ModelRecord[]> {
+    const isHealthy = await this.healthCheck();
     return [{
       modelId: `local-${this.config.model}`,
       modelName: this.config.model,
@@ -86,7 +103,11 @@ export class LocalHTTPProvider implements ISLMProvider {
       providerType: 'local',
       capabilities: await this.getCapabilities(),
       contextWindow: this.config.contextWindow,
-      availability: ModelAvailability.AVAILABLE,
+      availability: isHealthy ? ModelAvailability.AVAILABLE : ModelAvailability.UNAVAILABLE,
+      metadata: {
+        isNeural: false,
+        isLocalHTTP: true
+      },
       lastSeen: Date.now()
     }];
   }

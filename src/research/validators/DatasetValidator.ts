@@ -6,7 +6,7 @@ export class DatasetValidator {
   public validate(sample: TrainingSample): { valid: boolean, errors: string[] } {
     const result = TrainingSampleSchemaV1.safeParse(sample);
     if (!result.success) {
-      return { valid: false, errors: result.error.errors.map(e => e.message) };
+      return { valid: false, errors: result.error.issues.map((e) => e.message) };
     }
 
     const errors: string[] = [];

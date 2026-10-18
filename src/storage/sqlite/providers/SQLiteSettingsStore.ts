@@ -1,16 +1,13 @@
-import { SQLiteProvider } from '../core/SQLiteProvider';
-import { StorageProviderType } from '../../types/StorageTypes';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
-import * as fs from 'fs';
+import { SQLiteProvider } from '../core/SQLiteProvider.js';
+import { StorageProviderType } from '../../types/StorageTypes.js';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
 
 export class SQLiteSettingsStore extends SQLiteProvider {
   constructor(dbPath: string, logger: ILogger) {
-    // We map Settings to a type, e.g., Registry or a generic if we add it. 
-    // We'll reuse Registry for now, but name it uniquely.
-    super('sqlite-settings', StorageProviderType.Registry, dbPath, logger);
+    super('sqlite-settings', StorageProviderType.Settings, dbPath, logger);
   }
 
   protected getInitialSchema(): string {
-    return fs.readFileSync(__dirname + '/../schemas/SettingsSchema.sql', 'utf8');
+    return 'CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);';
   }
 }

@@ -313,7 +313,7 @@ export class FeatureBehaviorEngine implements IFeatureBehaviorEngine {
         f.nodes.some(
           n =>
             n.metadata?.featureBoundary &&
-            (affectedFeatureIds.has(n.metadata.targetFeatureId) ||
+            ((n.metadata.targetFeatureId && affectedFeatureIds.has(n.metadata.targetFeatureId)) ||
               changedResourceIds.includes(n.resourceId))
         )
       );

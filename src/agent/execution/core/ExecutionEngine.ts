@@ -78,7 +78,7 @@ export class ExecutionEngine {
        return acc;
     }, {} as Record<string, number>);
 
-    const overallStatus = stateCounts[ExecutionState.FAILED] > 0 
+    const overallStatus = (stateCounts[ExecutionState.FAILED] ?? 0) > 0 
        ? ExecutionState.FAILED 
        : (context.isCancelled ? ExecutionState.CANCELLED : ExecutionState.SUCCEEDED);
 

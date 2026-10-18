@@ -13,12 +13,14 @@ export interface LogEntry {
   details?: Record<string, any>;
 }
 
+export type LogPayload = Omit<LogEntry, 'severity' | 'timestamp'> & { severity?: LogSeverity | undefined };
+
 export interface ILogger {
-  debug(entry: Omit<LogEntry, 'severity' | 'timestamp'>): void;
-  info(entry: Omit<LogEntry, 'severity' | 'timestamp'>): void;
-  warn(entry: Omit<LogEntry, 'severity' | 'timestamp'>): void;
-  error(entry: Omit<LogEntry, 'severity' | 'timestamp'>): void;
-  fatal(entry: Omit<LogEntry, 'severity' | 'timestamp'>): void;
+  debug(entry: LogPayload): void;
+  info(entry: LogPayload): void;
+  warn(entry: LogPayload): void;
+  error(entry: LogPayload): void;
+  fatal(entry: LogPayload): void;
 }
 
 export const ILoggerToken = Symbol('ILogger');

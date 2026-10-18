@@ -14,16 +14,18 @@ export class ConfidenceHealthSignal implements IFeatureHealthSignal {
     const lowConfidenceThreshold = context.config?.lowConfidenceThreshold ?? 0.5;
 
     // Feature discovery confidence (confidence is string 'HIGH' | 'MEDIUM' | 'LOW' or number)
-    const discoveryConfidenceRaw = feature.confidence;
+    const discoveryConfidenceRaw: any = feature.confidence;
     let numericDiscoveryConfidence = 0.8;
     if (typeof discoveryConfidenceRaw === 'number') {
       numericDiscoveryConfidence = discoveryConfidenceRaw;
-    } else if (discoveryConfidenceRaw === 'LOW') {
+    } else if (discoveryConfidenceRaw === 'LOW' || discoveryConfidenceRaw?.level === 'LOW') {
       numericDiscoveryConfidence = 0.3;
-    } else if (discoveryConfidenceRaw === 'MEDIUM') {
+    } else if (discoveryConfidenceRaw === 'MEDIUM' || discoveryConfidenceRaw?.level === 'MEDIUM') {
       numericDiscoveryConfidence = 0.65;
-    } else if (discoveryConfidenceRaw === 'HIGH') {
+    } else if (discoveryConfidenceRaw === 'HIGH' || discoveryConfidenceRaw?.level === 'HIGH') {
       numericDiscoveryConfidence = 0.9;
+    } else if (typeof discoveryConfidenceRaw?.score === 'number') {
+      numericDiscoveryConfidence = discoveryConfidenceRaw.score;
     }
 
     if (numericDiscoveryConfidence < lowConfidenceThreshold) {
@@ -55,7 +57,7 @@ export class ConfidenceHealthSignal implements IFeatureHealthSignal {
     let lowConfidenceMappings = 0;
     for (const mapping of mappings) {
       const isLow =
-        mapping.confidence === 'LOW' ||
+        (mapping.confidence as any) === 'LOW' ||
         (typeof (mapping as unknown as { score?: number }).score === 'number' &&
           ((mapping as unknown as { score?: number }).score ?? 1) < 0.4);
 

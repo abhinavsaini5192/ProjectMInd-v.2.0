@@ -1,10 +1,155 @@
 version: '3.8'
 
 services:
-  projectmind:
-    build: .
-    volumes:
-      - .:/workspace
+  # One-shot migration runner executing schema migrations before services start
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: projectmind-migration
+    command: ["dumb-init", "--", "node", "dist/platform/main.js", "--role=migration"]
+    restart: "no"
     environment:
-      - PROJECTMIND_WORKSPACE=/workspace
-    command: ["start"]
+      - NODE_ENV=production
+      - PROJECTMIND_ENV=production
+      - PROJECTMIND_STORAGE_TYPE=sqlite
+      - PROJECTMIND_STORAGE_LOCATION=/app/.projectmind/data
+      - PROJECTMIND_AUTO_MIGRATE=false
+      - PROJECTMIND_MASTER_KEY=${PROJECTMIND_MASTER_KEY:-}
+    volumes:
+      - projectmind-data:/app/.projectmind/data
+    networks:
+      - projectmind-net
+
+  # API service serving HTTP routes, health/readiness probes, and Prometheus metrics
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: projectmind-api
+    command: ["dumb-init", "--", "node", "dist/platform/main.js", "--role=api"]
+    restart: unless-stopped
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PROJECTMIND_ENV=production
+      - PROJECTMIND_ROLE=api
+      - PORT=3000
+      - HOST=0.0.0.0
+      - PROJECTMIND_LOG_LEVEL=INFO
+      - PROJECTMIND_LOG_FORMAT=json
+      - PROJECTMIND_STORAGE_TYPE=sqlite
+      - PROJECTMIND_STORAGE_LOCATION=/app/.projectmind/data
+      - PROJECTMIND_AUTO_MIGRATE=false
+      - PROJECTMIND_REDIS_ENABLED=true
+      - PROJECTMIND_REDIS_URL=redis://redis:6379
+      - PROJECTMIND_RUNTIME_ENABLED=true
+      - PROJECTMIND_MAX_SESSIONS=20
+      - PROJECTMIND_MAX_TASKS=50
+      - PROJECTMIND_MASTER_KEY=${PROJECTMIND_MASTER_KEY:-}
+    volumes:
+      - projectmind-data:/app/.projectmind/data
+    networks:
+      - projectmind-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health/ready || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Background worker service processing durable jobs and transactional outbox events
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: projectmind-worker
+    command: ["dumb-init", "--", "node", "dist/platform/main.js", "--role=worker"]
+    restart: unless-stopped
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PROJECTMIND_ENV=production
+      - PROJECTMIND_ROLE=worker
+      - PORT=3000
+      - HOST=0.0.0.0
+      - PROJECTMIND_WORKER_CONCURRENCY=5
+      - PROJECTMIND_POLL_INTERVAL_MS=250
+      - PROJECTMIND_VISIBILITY_TIMEOUT_MS=30000
+      - PROJECTMIND_LOG_LEVEL=INFO
+      - PROJECTMIND_LOG_FORMAT=json
+      - PROJECTMIND_STORAGE_TYPE=sqlite
+      - PROJECTMIND_STORAGE_LOCATION=/app/.projectmind/data
+      - PROJECTMIND_AUTO_MIGRATE=false
+      - PROJECTMIND_REDIS_ENABLED=true
+      - PROJECTMIND_REDIS_URL=redis://redis:6379
+      - PROJECTMIND_MASTER_KEY=${PROJECTMIND_MASTER_KEY:-}
+    volumes:
+      - projectmind-data:/app/.projectmind/data
+    networks:
+      - projectmind-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health/live || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Redis for distributed coordination, lease locks, and caching
+  redis:
+    image: redis:7.4-alpine
+    container_name: projectmind-redis
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1"]
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - projectmind-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+volumes:
+  projectmind-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  projectmind-net:
+    driver: bridge
+

@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
-import { IWorkspacePermissions } from './interfaces/IWorkspacePermissions';
-import { WorkspacePermissions as PermModel } from './models/WorkspacePermissions';
+import type { IWorkspacePermissions } from './interfaces/IWorkspacePermissions';
+import type { WorkspacePermissions as PermModel } from './models/WorkspacePermissions';
 import { PermissionDeniedError } from './types/FilesystemErrors';
 
 export class WorkspacePermissions implements IWorkspacePermissions {

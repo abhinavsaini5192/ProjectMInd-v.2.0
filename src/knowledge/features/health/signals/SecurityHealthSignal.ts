@@ -60,7 +60,7 @@ export class SecurityHealthSignal implements IFeatureHealthSignal {
                 featureId,
                 signalType: 'PROMPT_INJECTION_VULNERABILITY',
                 severity: 'CRITICAL',
-                value: injection.reason || 'PROMPT_INJECTION_SUSPECTED',
+                value: injection.matches?.join(', ') || 'PROMPT_INJECTION_SUSPECTED',
                 normalizedValue: 95,
                 description: `Suspected prompt injection sequence found in documentation resource "${mapping.resourceId}".`,
                 evidence: [
@@ -68,7 +68,7 @@ export class SecurityHealthSignal implements IFeatureHealthSignal {
                     sourceType: 'DOCUMENTATION_RESOURCE',
                     sourceId: mapping.resourceId,
                     evidenceType: 'PROMPT_INJECTION_MATCH',
-                    description: `Injection pattern flagged: ${injection.reason || 'Pattern matched suspicious instruction override'}`,
+                    description: `Injection pattern flagged: ${injection.matches?.join(', ') || 'Pattern matched suspicious instruction override'}`,
                     confidence: 0.92
                   })
                 ],
@@ -109,7 +109,7 @@ export class SecurityHealthSignal implements IFeatureHealthSignal {
     // 2. Check for missing authentication on sensitive features/endpoints
     const isSensitiveFeature =
       /admin|auth|payment|billing|user|secret|credential|token/i.test(context.feature.name) ||
-      context.feature.type === 'CORE' ||
+      (context.feature.type as any) === 'CORE' ||
       context.feature.type === 'PLATFORM';
 
     const endpoints = mappings.filter(

@@ -1,10 +1,11 @@
-import { Service } from '../interfaces';
-import { KnowledgeGraph } from '../intelligence/engines/KnowledgeGraphBuilder';
-import { ContextPackage } from './models/ContextModels';
-import { KnowledgeRetriever, ContextCache } from './retrieval/RetrievalEngines';
-import { IntentRouter, ContextPlanner, ContextExpander, FileSelectionEngine } from './planning/PlanningEngines';
-import { TokenOptimizer, PromptContextBuilder, VerificationEngine } from './optimization/OptimizationEngines';
-import { AgentAdapter, GenericMarkdownAdapter } from './adapters/AgentAdapters';
+import type { Service } from '../interfaces/index.js';
+import type { KnowledgeGraph } from '../intelligence/engines/KnowledgeGraphBuilder.js';
+import type { ContextPackage } from './models/ContextModels.js';
+import { KnowledgeRetriever, ContextCache } from './retrieval/RetrievalEngines.js';
+import { IntentRouter, ContextPlanner, ContextExpander, FileSelectionEngine } from './planning/PlanningEngines.js';
+import { TokenOptimizer, PromptContextBuilder, VerificationEngine } from './optimization/OptimizationEngines.js';
+import type { AgentAdapter } from './adapters/AgentAdapters.js';
+import { GenericMarkdownAdapter } from './adapters/AgentAdapters.js';
 import { ProjectMindError } from '../errors';
 
 /**

@@ -1,9 +1,13 @@
 class EvaluationFramework:
-    """Calculates precision, recall, F1, and confidence calibration against hold-out datasets."""
+    """Calculates precision, recall, F1, and confidence calibration against hold-out datasets.
+    
+    NOTE: Currently returns mock placeholder metrics for workflow prototyping.
+    Actual statistical scoring against real test datasets is not yet implemented.
+    """
     
     def evaluate(self, model, test_dataset) -> dict:
-        print("Evaluating model against test dataset...")
-        # Stub evaluation logic
+        print("Evaluating model against test dataset (mock prototype)...")
+        # Placeholder demonstration metrics (not empirical measurements)
         results = {
             "accuracy": 0.92,
             "precision": 0.89,

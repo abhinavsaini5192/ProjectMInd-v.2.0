@@ -1,5 +1,5 @@
-import { SQLiteConnectionManager } from './SQLiteConnectionManager';
-import { DatabaseStatistics } from '../models/DatabaseStatistics';
+import { SQLiteConnectionManager } from './SQLiteConnectionManager.js';
+import type { DatabaseStatistics } from '../models/DatabaseStatistics.js';
 import * as fs from 'fs';
 
 export class SQLiteStatistics {

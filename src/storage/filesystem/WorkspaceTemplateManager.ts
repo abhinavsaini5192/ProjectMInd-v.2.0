@@ -1,4 +1,4 @@
-import { IWorkspaceTemplateManager } from './interfaces/IWorkspaceTemplateManager';
+import type { IWorkspaceTemplateManager } from './interfaces/IWorkspaceTemplateManager';
 import { WorkspaceType } from './types/FilesystemTypes';
 
 export class WorkspaceTemplateManager implements IWorkspaceTemplateManager {

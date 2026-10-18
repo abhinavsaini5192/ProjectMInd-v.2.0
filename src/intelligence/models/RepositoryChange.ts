@@ -20,3 +20,9 @@ export interface ASTChange {
   previousSignature?: string;
   newSignature?: string;
 }
+
+export interface GenericASTNode {
+  type: string;
+  name: string;
+  signature: string;
+}

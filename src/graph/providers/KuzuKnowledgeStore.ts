@@ -1,9 +1,9 @@
-import { IStorageProvider } from '../../storage/interfaces/IStorageProvider';
-import { StorageProviderType, ProviderState } from '../../storage/types/StorageTypes';
-import { StorageConfiguration } from '../../storage/models/StorageConfiguration';
-import { StorageHealth } from '../../storage/models/StorageHealth';
-import { StorageStatistics } from '../../storage/models/StorageStatistics';
-import { ILogger } from '../../workspace/interfaces/ILogger';
+import { IStorageProvider } from '../../storage/interfaces/IStorageProvider.js';
+import { StorageProviderType, ProviderState } from '../../storage/types/StorageTypes.js';
+import { StorageConfiguration } from '../../storage/models/StorageConfiguration.js';
+import { StorageHealth } from '../../storage/models/StorageHealth.js';
+import { StorageStatistics } from '../../storage/models/StorageStatistics.js';
+import { ILogger } from '../../workspace/interfaces/ILogger.js';
 
 // Since kuzu is a native binary and potentially tricky to mock directly without it installed properly,
 // we wrap its types loosely or require it at runtime.
@@ -84,19 +84,28 @@ export class KuzuKnowledgeStore implements IStorageProvider {
 
   async healthCheck(): Promise<StorageHealth> {
     return {
+      providerName: 'kuzu-graph',
       databaseName: 'kuzu',
       isHealthy: this.state === ProviderState.Ready,
       integrityCheckPassed: true,
       foreignKeyCheckPassed: true,
       currentVersion: 1,
+      lastCheckTimestamp: new Date().toISOString(),
       errors: []
     };
   }
 
   async getStatistics(): Promise<StorageStatistics> {
     return {
+      providerName: 'kuzu-graph',
       databaseName: 'kuzu',
-      sizeBytes: 0,
+      totalReads: 0,
+      totalWrites: 0,
+      averageLatencyMs: 0,
+      uptimeMs: 0,
+      activeConnections: this.conn ? 1 : 0,
+      errorCount: 0,
+      bytesStored: 0,
       tableCount: 6,
       indexCount: 0,
       pageCount: 0,

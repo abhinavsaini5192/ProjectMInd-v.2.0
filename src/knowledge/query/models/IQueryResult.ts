@@ -12,8 +12,10 @@ export interface IQueryResult {
   data: any;
   sources: string[]; // Entity IDs that formed the data
   confidence: number;
+  explanation?: QueryExplanation;
   generatedAt: number;
   knowledgeVersion: string;
   snapshotId: string;
-  explanation?: QueryExplanation;
 }
+
+export * from './IQuery.js';

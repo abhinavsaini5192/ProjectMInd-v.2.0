@@ -1,5 +1,5 @@
-import { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
-import { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
+import type { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
+import type { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
 import * as path from 'path';
 
 export class WorkspaceCleanupManager {

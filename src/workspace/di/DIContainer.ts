@@ -15,8 +15,21 @@ export class DIContainer {
   private services = new Map<symbol, ServiceDescriptor>();
   private resolving = new Set<symbol>(); // For circular dependency detection
 
-  registerSingleton<T>(token: symbol, implementation: new (...args: any[]) => T, dependencies: symbol[] = []): void {
-    this.services.set(token, { token, implementation, dependencies, lifetime: 'Singleton' });
+  registerSingleton<T>(
+    token: symbol,
+    implementation: (new (...args: any[]) => T) | ((container: DIContainer) => T),
+    dependencies: symbol[] = []
+  ): void {
+    const isClass = typeof implementation === 'function' && implementation.prototype && implementation.prototype.constructor === implementation && implementation.toString().startsWith('class');
+    if (!isClass && typeof implementation === 'function') {
+      this.services.set(token, { token, factory: implementation as (container: DIContainer) => T, dependencies: [], lifetime: 'Singleton' });
+    } else {
+      this.services.set(token, { token, implementation: implementation as new (...args: any[]) => T, dependencies, lifetime: 'Singleton' });
+    }
+  }
+
+  hasRegistration(token: symbol): boolean {
+    return this.services.has(token);
   }
 
   registerTransient<T>(token: symbol, implementation: new (...args: any[]) => T, dependencies: symbol[] = []): void {
@@ -29,6 +42,10 @@ export class DIContainer {
 
   registerFactory<T>(token: symbol, factory: (container: DIContainer) => T, lifetime: ServiceLifetime = 'Transient'): void {
     this.services.set(token, { token, factory, dependencies: [], lifetime });
+  }
+
+  registerInstance<T>(token: symbol, instance: T): void {
+    this.services.set(token, { token, instance, dependencies: [], lifetime: 'Singleton' });
   }
 
   resolve<T>(token: symbol): T {

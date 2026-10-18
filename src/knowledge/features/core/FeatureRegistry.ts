@@ -1,11 +1,12 @@
-import { IFeatureRegistry } from '../interfaces/IFeatureRegistry';
-import { IFeatureRepository } from '../interfaces/IFeatureRepository';
-import { Feature } from '../models/Feature';
-import { FeatureId } from '../models/FeatureId';
-import { FeatureType } from '../models/FeatureType';
-import { FeatureStatus } from '../models/FeatureStatus';
-import { DuplicateFeatureError } from '../errors/DuplicateFeatureError';
-import { FeatureNotFoundError } from '../errors/FeatureNotFoundError';
+import { IFeatureRegistry } from '../interfaces/IFeatureRegistry.js';
+import { IFeatureRepository } from '../interfaces/IFeatureRepository.js';
+import { Feature } from '../models/Feature.js';
+import { IFeature } from '../models/IFeature.js';
+import { FeatureId } from '../models/FeatureId.js';
+import { FeatureType } from '../models/FeatureType.js';
+import { FeatureStatus } from '../models/FeatureStatus.js';
+import { DuplicateFeatureError } from '../errors/DuplicateFeatureError.js';
+import { FeatureNotFoundError } from '../errors/FeatureNotFoundError.js';
 
 export class FeatureRegistry implements IFeatureRegistry {
   private inMemoryFeatures = new Map<FeatureId, any>();
@@ -32,10 +33,10 @@ export class FeatureRegistry implements IFeatureRegistry {
     }
   }
 
-  public async register(feature: Feature): Promise<void> {
+  public async register(feature: Feature | IFeature): Promise<void> {
     this.registerSync(feature);
     if (this.repository) {
-      await this.repository.create(feature);
+      await this.repository.create(feature as Feature);
     }
   }
 

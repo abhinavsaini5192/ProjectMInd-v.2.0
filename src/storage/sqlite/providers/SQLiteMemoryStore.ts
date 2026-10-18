@@ -1,7 +1,6 @@
-import { SQLiteProvider } from '../core/SQLiteProvider';
-import { StorageProviderType } from '../../types/StorageTypes';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
-import * as fs from 'fs';
+import { SQLiteProvider } from '../core/SQLiteProvider.js';
+import { StorageProviderType } from '../../types/StorageTypes.js';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
 
 export class SQLiteMemoryStore extends SQLiteProvider {
   constructor(dbPath: string, logger: ILogger) {
@@ -9,6 +8,6 @@ export class SQLiteMemoryStore extends SQLiteProvider {
   }
 
   protected getInitialSchema(): string {
-    return fs.readFileSync(__dirname + '/../schemas/MemorySchema.sql', 'utf8');
+    return 'CREATE TABLE IF NOT EXISTS memories (id TEXT PRIMARY KEY, type TEXT, content TEXT, timestamp INTEGER);';
   }
 }

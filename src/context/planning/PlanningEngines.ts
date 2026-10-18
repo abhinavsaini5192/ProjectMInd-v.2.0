@@ -1,6 +1,6 @@
 import { KnowledgeRetriever } from '../retrieval/RetrievalEngines';
-import { Fact } from '../../extraction/models/Fact';
-import { SelectedFile } from '../models/ContextModels';
+import type { Fact } from '../../extraction/models/Fact.js';
+import type { SelectedFile } from '../models/ContextModels.js';
 
 export class IntentRouter {
   public routeIntent(userPrompt: string): string {

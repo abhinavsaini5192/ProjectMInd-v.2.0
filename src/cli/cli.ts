@@ -1,49 +1,33 @@
-import { ProjectMindKernel } from '../kernel/ProjectMindKernel';
-import { CommandRouter } from './CommandRouter';
-import { PluginCommand } from './PluginCommand';
-import { InitCommand } from './commands/InitCommand';
-import { DoctorCommand } from './commands/DoctorCommand';
-import { BenchmarkCommand } from './commands/BenchmarkCommand';
-import { CompatibilityCommand } from './commands/CompatibilityCommand';
+import { CLIApplication } from './core/CLIApplication.js';
 
 /**
- * Entry point for the CLI.
+ * Executes the ProjectMind CLI platform with the supplied arguments.
  */
-async function main() {
-  const args = process.argv.slice(2);
-  const workspacePath = process.cwd();
-  
-  const kernel = new ProjectMindKernel(workspacePath);
-  const router = new CommandRouter();
+export async function runCLI(argv: readonly string[] = process.argv.slice(2)): Promise<number> {
+  const app = CLIApplication.createDefault();
+  return app.run(argv);
+}
 
-  // Register commands
-  router.register(new InitCommand());
-  router.register(new DoctorCommand());
-  router.register(new BenchmarkCommand());
-  router.register(new CompatibilityCommand());
-  
-  // We wrap the existing PluginCommand so it fits the Command interface
-  router.register({
-    name: 'plugin',
-    description: 'Manage ProjectMind plugins',
-    execute: async (args: string[], k: ProjectMindKernel) => {
-      const cmd = new PluginCommand(k);
-      await cmd.execute(args);
-    }
-  });
-
+/**
+ * Main application entry point for command-line execution.
+ */
+export async function main(): Promise<void> {
   try {
-    // Only initialize necessary components for CLI
-    await kernel.initialize();
-    await router.route(args, kernel);
-  } catch (error: any) {
-    console.error(`CLI Error: ${error.message}`);
+    const exitCode = await runCLI();
+    if (exitCode !== 0) {
+      process.exit(exitCode);
+    }
+  } catch (err: unknown) {
+    console.error(`Fatal CLI Error: ${err instanceof Error ? err.message : String(err)}`);
     process.exit(1);
-  } finally {
-    await kernel.shutdown();
   }
 }
 
-if (require.main === module) {
+// Detect direct command-line execution (e.g. node dist/cli/cli.js)
+const entryScript = process.argv[1];
+if (
+  entryScript &&
+  (entryScript.endsWith('cli.ts') || entryScript.endsWith('cli.js'))
+) {
   main();
 }

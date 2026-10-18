@@ -14,6 +14,7 @@ export interface FeatureFlow {
   direction: FeatureFlowDirection;
   nodes: FeatureFlowNode[];
   edges: FeatureFlowEdge[];
+  steps?: any[];
   entryNodeId?: string;
   exitNodeIds: string[];
   confidence: number;

@@ -7,3 +7,9 @@ coverage/
 .env
 .env.local
 .gemini/
+.projectmind/
+scratch/
+current_errors.txt
+*.db
+*.db-wal
+*.db-shm

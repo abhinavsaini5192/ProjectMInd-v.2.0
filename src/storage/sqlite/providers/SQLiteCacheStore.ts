@@ -1,6 +1,6 @@
-import { SQLiteProvider } from '../core/SQLiteProvider';
-import { StorageProviderType } from '../../types/StorageTypes';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
+import { SQLiteProvider } from '../core/SQLiteProvider.js';
+import { StorageProviderType } from '../../types/StorageTypes.js';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
 import * as fs from 'fs';
 
 export class SQLiteCacheStore extends SQLiteProvider {
@@ -9,6 +9,6 @@ export class SQLiteCacheStore extends SQLiteProvider {
   }
 
   protected getInitialSchema(): string {
-    return fs.readFileSync(__dirname + '/../schemas/CacheSchema.sql', 'utf8');
+    return 'CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT, expires_at INTEGER);';
   }
 }

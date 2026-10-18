@@ -62,4 +62,14 @@ export class SnapshotManager {
       throw new ProjectMindError(`Failed to restore snapshot: ${err.message}`, 'SNAPSHOT_RESTORE_FAILED');
     }
   }
+
+  /**
+   * Lists all existing snapshot directories.
+   */
+  public listSnapshots(): string[] {
+    if (!fs.existsSync(this.snapshotsDir)) {
+      return [];
+    }
+    return fs.readdirSync(this.snapshotsDir);
+  }
 }

@@ -45,7 +45,7 @@ describe('Dependency Intelligence Engine', () => {
     confidence: 1.0,
     weight: 1.0,
     version: 1,
-    evidence: [{ description: 'mock', confidenceScore: 1.0, sourceType: 'import' }],
+    evidence: [{ description: 'mock', confidenceScore: 1.0 }],
     metadata: {},
     history: [],
     created: 1,

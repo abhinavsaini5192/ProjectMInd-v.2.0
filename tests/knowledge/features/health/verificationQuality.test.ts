@@ -12,7 +12,7 @@ describe('Phase 6.6 Verification Quality Assessment', () => {
     const intTest = HealthTestHelper.createMapping('feat_tested', 'tests/service.integration.test.ts', 'FILE', 'TEST');
     const e2eTest = HealthTestHelper.createMapping('feat_tested', 'tests/service.e2e.test.ts', 'FILE', 'TEST');
 
-    const flow = HealthTestHelper.createFlow('feat_tested', 'flow_1', 'Main Flow', 'PROCESS', 4, {
+    const flow = HealthTestHelper.createFlow('feat_tested', 'flow_1', 'Main Flow', 'PRIMARY', 4, {
       isVerified: true
     });
 

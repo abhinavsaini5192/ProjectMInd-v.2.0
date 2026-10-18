@@ -104,7 +104,10 @@ export class VerificationHealthSignal implements IFeatureHealthSignal {
     if (context.behavior && context.behavior.flows) {
       for (const flow of context.behavior.flows) {
         const isVerified = (flow as unknown as { isVerified?: boolean }).isVerified;
-        const isCritical = flow.flowType === 'AUTHENTICATION' || flow.flowType === 'TRANSACTION';
+        const isCritical =
+          flow.flowType === 'AUTHENTICATION' ||
+          flow.flowType === 'AUTHORIZATION' ||
+          flow.flowType === 'TRANSACTION';
         if (isVerified === false || (isVerified === undefined && testMappings.length === 0)) {
           if (isCritical) {
             signals.push(

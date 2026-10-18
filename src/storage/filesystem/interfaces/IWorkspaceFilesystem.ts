@@ -1,8 +1,8 @@
-import { IWorkspaceDirectoryManager } from './IWorkspaceDirectoryManager';
-import { IWorkspaceFileManager } from './IWorkspaceFileManager';
-import { IWorkspacePointerManager } from './IWorkspacePointerManager';
-import { IWorkspacePermissions } from './IWorkspacePermissions';
-import { IWorkspaceTemplateManager } from './IWorkspaceTemplateManager';
+import type { IWorkspaceDirectoryManager } from './IWorkspaceDirectoryManager';
+import type { IWorkspaceFileManager } from './IWorkspaceFileManager';
+import type { IWorkspacePointerManager } from './IWorkspacePointerManager';
+import type { IWorkspacePermissions } from './IWorkspacePermissions';
+import type { IWorkspaceTemplateManager } from './IWorkspaceTemplateManager';
 
 export interface IWorkspaceFilesystem {
   directories: IWorkspaceDirectoryManager;

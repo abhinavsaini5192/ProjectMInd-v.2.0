@@ -28,10 +28,15 @@ export class RecoveryEngine {
     const { category, severity } = this.classifier.classify(afterVerification);
     this.dispatcher.publish('FAILURE_CLASSIFIED', { category, severity });
 
-    let currentState = RecoveryState.ANALYZING;
+    let currentState: RecoveryState = RecoveryState.ANALYZING;
     let attemptNumber = 0;
-    
-    while (currentState !== RecoveryState.SUCCESS && currentState !== RecoveryState.ROLLED_BACK && currentState !== RecoveryState.ESCALATED && currentState !== RecoveryState.ABORTED) {
+    const isTerminal = (state: RecoveryState): boolean =>
+      state === RecoveryState.SUCCESS ||
+      state === RecoveryState.ROLLED_BACK ||
+      state === RecoveryState.ESCALATED ||
+      state === RecoveryState.ABORTED;
+
+    while (!isTerminal(currentState)) {
       
       const plan = this.decisionEngine.selectStrategy(category, severity, attemptNumber, this.MAX_ATTEMPTS, !preExisting.isNew);
       this.dispatcher.publish('RECOVERY_STRATEGY_SELECTED', { strategy: plan.strategy });

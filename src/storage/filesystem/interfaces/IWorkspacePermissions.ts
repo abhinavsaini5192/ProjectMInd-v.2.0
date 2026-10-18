@@ -1,4 +1,4 @@
-import { WorkspacePermissions } from '../models/WorkspacePermissions';
+import type { WorkspacePermissions } from '../models/WorkspacePermissions';
 
 export interface IWorkspacePermissions {
   checkPermissions(path: string): Promise<WorkspacePermissions>;

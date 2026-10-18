@@ -1,9 +1,9 @@
-import { ISLMProvider } from '../interfaces/ISLMProvider';
-import { SLMRequest } from '../models/SLMRequest';
-import { SLMPrediction } from '../models/SLMResponse';
-import { SLMOutputValidator } from './SLMOutputValidator';
-import { SLMFallbackManager } from './SLMFallbackManager';
-import { SLMError } from '../models/SLMError';
+import { ISLMProvider } from '../interfaces/ISLMProvider.js';
+import { SLMRequest } from '../models/SLMRequest.js';
+import { SLMPrediction } from '../models/SLMResponse.js';
+import { SLMOutputValidator } from './SLMOutputValidator.js';
+import { SLMFallbackManager } from './SLMFallbackManager.js';
+import { SLMError } from '../models/SLMError.js';
 
 export class SLMGateway {
   constructor(
@@ -16,8 +16,8 @@ export class SLMGateway {
     try {
       // 1. Check capability
       const caps = this.provider.getCapabilities();
-      if (!caps.supportedTasks.includes(request.taskType)) {
-         throw new SLMError('CAPABILITY_MISMATCH', `Provider does not support ${request.taskType}`, request.requestId, caps.provider);
+      if (caps.supportedTasks && request.taskType && !caps.supportedTasks.includes(request.taskType)) {
+         throw new SLMError('CAPABILITY_MISMATCH', `Provider does not support ${request.taskType}`, request.requestId, caps.provider || 'unknown');
       }
 
       // 2. We would normally apply PrivacyFilter here to request.taskDescription
@@ -32,7 +32,7 @@ export class SLMGateway {
       // 5. Combine confidences
       // SLM proposes confidence, we dampen it. 
       // (For this mock phase, we just return the prediction directly)
-      return response.prediction;
+      return response.prediction || this.fallbackManager.getDeterministicFallback(request);
 
     } catch (error) {
       this.fallbackManager.handleFailure(error, request.requestId);

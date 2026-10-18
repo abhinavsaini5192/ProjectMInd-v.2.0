@@ -1,18 +1,18 @@
-import { IStorageProvider } from '../../interfaces/IStorageProvider';
-import { StorageProviderType, ProviderState } from '../../types/StorageTypes';
-import { StorageConfiguration } from '../../models/StorageConfiguration';
-import { StorageHealth } from '../../models/StorageHealth';
-import { StorageStatistics } from '../../models/StorageStatistics';
-import { ILogger } from '../../../workspace/interfaces/ILogger';
+import type { IStorageProvider } from '../../interfaces/IStorageProvider.js';
+import { StorageProviderType, ProviderState } from '../../types/StorageTypes.js';
+import type { StorageConfiguration } from '../../models/StorageConfiguration.js';
+import type { StorageHealth } from '../../models/StorageHealth.js';
+import type { StorageStatistics } from '../../models/StorageStatistics.js';
+import type { ILogger } from '../../../workspace/interfaces/ILogger.js';
 
-import { SQLiteConnectionManager } from './SQLiteConnectionManager';
-import { SQLiteHealthMonitor } from './SQLiteHealthMonitor';
-import { SQLiteStatistics } from './SQLiteStatistics';
-import { SQLiteBackupManager } from './SQLiteBackupManager';
-import { SQLiteSchemaManager } from './SQLiteSchemaManager';
-import { SQLiteMigrationManager } from './SQLiteMigrationManager';
-import { SQLiteTransactionManager } from './SQLiteTransactionManager';
-import { SQLiteQueryBuilder } from './SQLiteQueryBuilder';
+import { SQLiteConnectionManager } from './SQLiteConnectionManager.js';
+import { SQLiteHealthMonitor } from './SQLiteHealthMonitor.js';
+import { SQLiteStatistics } from './SQLiteStatistics.js';
+import { SQLiteBackupManager } from './SQLiteBackupManager.js';
+import { SQLiteSchemaManager } from './SQLiteSchemaManager.js';
+import { SQLiteMigrationManager } from './SQLiteMigrationManager.js';
+import { SQLiteTransactionManager } from './SQLiteTransactionManager.js';
+import { SQLiteQueryBuilder } from './SQLiteQueryBuilder.js';
 
 export abstract class SQLiteProvider implements IStorageProvider {
   public state: ProviderState = ProviderState.Unregistered;
@@ -69,11 +69,35 @@ export abstract class SQLiteProvider implements IStorageProvider {
   }
 
   async healthCheck(): Promise<StorageHealth> {
-    return this.healthMonitor.checkHealth();
+    const dbHealth = this.healthMonitor.checkHealth();
+    return {
+      providerName: this.name,
+      isHealthy: dbHealth.isHealthy,
+      databaseName: dbHealth.databaseName,
+      integrityCheckPassed: dbHealth.integrityCheckPassed,
+      foreignKeyCheckPassed: dbHealth.foreignKeyCheckPassed,
+      currentVersion: dbHealth.currentVersion,
+      lastCheckTimestamp: new Date().toISOString(),
+      errors: dbHealth.errors,
+    };
   }
 
   async getStatistics(): Promise<StorageStatistics> {
-    return this.statistics.getStatistics();
+    const dbStats = this.statistics.getStatistics();
+    return {
+      providerName: this.name,
+      databaseName: dbStats.databaseName,
+      totalReads: 0,
+      totalWrites: 0,
+      tableCount: dbStats.tableCount,
+      indexCount: dbStats.indexCount,
+      pageCount: dbStats.pageCount,
+      pageSize: dbStats.pageSize,
+      averageLatencyMs: 0,
+      uptimeMs: 0,
+      activeConnections: 1,
+      errorCount: 0,
+    };
   }
 
   async backup(destinationPath: string): Promise<void> {

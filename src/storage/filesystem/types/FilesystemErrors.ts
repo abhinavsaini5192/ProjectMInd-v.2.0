@@ -1,8 +1,8 @@
 import { ProjectMindError } from '../../../workspace/errors';
 
 export class FilesystemCoreError extends ProjectMindError {
-  constructor(message: string, details?: Record<string, any>) {
-    super(message, 'ERR_FILESYSTEM_CORE', details);
+  constructor(message: string, code: string = 'ERR_FILESYSTEM_CORE', details?: Record<string, any>) {
+    super(message, code, details);
   }
 }
 

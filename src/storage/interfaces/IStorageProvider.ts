@@ -1,7 +1,7 @@
 import { StorageProviderType, ProviderState } from '../types/StorageTypes';
-import { StorageConfiguration } from '../models/StorageConfiguration';
-import { StorageHealth } from '../models/StorageHealth';
-import { StorageStatistics } from '../models/StorageStatistics';
+import type { StorageConfiguration } from '../models/StorageConfiguration';
+import type { StorageHealth } from '../models/StorageHealth';
+import type { StorageStatistics } from '../models/StorageStatistics';
 
 export interface IStorageProvider {
   /** Uniquely identifies the provider implementation (e.g., 'sqlite', 'kuzu') */

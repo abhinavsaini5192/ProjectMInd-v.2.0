@@ -1,0 +1,132 @@
+groups:
+  - name: projectmind_operational_alerts
+    rules:
+      # 1. High API Request Error Rate
+      - alert: ProjectMindHighRequestErrorRate
+        expr: |
+          sum(rate(projectmind_counter_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(projectmind_counter_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          tier: api
+        annotations:
+          summary: "ProjectMind API request 5xx error rate exceeds 5%"
+          description: "High error rate detected over the last 5 minutes. More than 5% of all HTTP requests resulted in 5xx internal server errors."
+          likely_causes: "Database timeout, unhandled exception in core kernel, or dependency outage."
+          first_action: "Check application logs for errorClassification='INTERNAL_ERROR' or 'DEPENDENCY_OUTAGE' and inspect /health/ready endpoint."
+
+      # 2. Elevated Request Latency
+      - alert: ProjectMindElevatedRequestLatency
+        expr: |
+          projectmind_timer_api_request_duration_avg_ms > 2000
+        for: 3m
+        labels:
+          severity: warning
+          tier: api
+        annotations:
+          summary: "ProjectMind API average request latency exceeds 2000ms"
+          description: "Average latency across in-flight requests is currently {{ $value }}ms."
+          likely_causes: "Slow SQLite WAL checkpoints, lock contention, heavy context package assembly, or CPU throttling."
+          first_action: "Inspect SQLite PRAGMA busy_timeout, CPU metrics, and active socket connections via /metrics."
+
+      # 3. Database / Storage Unavailability
+      - alert: ProjectMindDatabaseUnavailable
+        expr: |
+          projectmind_gauge_dependency_up{dependency="sqlite"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          tier: storage
+        annotations:
+          summary: "ProjectMind SQLite database probe failed"
+          description: "The database connectivity check is reporting zero availability."
+          likely_causes: "Disk full, filesystem permissions revoked, database locked by zombie process, or disk corruption."
+          first_action: "Run 'projectmind doctor' on host or inspect pod volume mounts."
+
+      # 4. Durable Job Queue Backlog Growth
+      - alert: ProjectMindJobQueueBacklog
+        expr: |
+          projectmind_gauge_job_queue_depth > 100
+        for: 5m
+        labels:
+          severity: warning
+          tier: worker
+        annotations:
+          summary: "ProjectMind durable job queue backlog exceeds 100 pending jobs"
+          description: "Queue backlog has remained above 100 jobs for over 5 minutes."
+          likely_causes: "Worker pool starvation, long-running agent tasks, or worker container crashed."
+          first_action: "Scale worker concurrency via PROJECTMIND_WORKER_CONCURRENCY or inspect worker pod status."
+
+      # 5. Dead-Letter Queue Accumulation
+      - alert: ProjectMindDeadLetterAccumulation
+        expr: |
+          increase(projectmind_counter_jobs_dead_lettered_total[15m]) > 5
+        for: 1m
+        labels:
+          severity: critical
+          tier: worker
+        annotations:
+          summary: "Jobs are failing permanently and routing to dead-letter storage"
+          description: "Over 5 jobs have been routed to dead-letter storage in the past 15 minutes."
+          likely_causes: "Poison-pill job payloads, persistent database constraint violations, or missing job handler registration."
+          first_action: "Inspect pm_job_dead_letter table or query failed job details with 'projectmind doctor'."
+
+      # 6. Transactional Outbox Dispatch Delay
+      - alert: ProjectMindOutboxBacklog
+        expr: |
+          projectmind_gauge_outbox_pending_events > 50
+        for: 3m
+        labels:
+          severity: warning
+          tier: events
+        annotations:
+          summary: "Transactional outbox event backlog exceeds 50 pending events"
+          description: "Events in pm_event_outbox are accumulating faster than OutboxDispatcher is publishing them."
+          likely_causes: "Outbox dispatcher timer paused, downstream event bus subscriber blocking, or DB lock contention."
+          first_action: "Verify deployment role has scheduler or worker active; check scheduler logs."
+
+      # 7. Worker Starvation
+      - alert: ProjectMindWorkerStarvation
+        expr: |
+          projectmind_gauge_workers_busy >= projectmind_gauge_workers_active
+          and
+          projectmind_gauge_job_queue_depth > 0
+        for: 5m
+        labels:
+          severity: warning
+          tier: worker
+        annotations:
+          summary: "All background workers saturated while pending jobs wait"
+          description: "100% of worker pool capacity is consumed while jobs remain pending in queue."
+          likely_causes: "Worker concurrency limit too low for current traffic volume or jobs stuck without timeout."
+          first_action: "Increase worker concurrency or review job timeout configurations."
+
+      # 8. Repeated Platform Restarts
+      - alert: ProjectMindRepeatedRestarts
+        expr: |
+          increase(projectmind_counter_platform_startups_total[1h]) > 5
+        for: 1m
+        labels:
+          severity: critical
+          tier: platform
+        annotations:
+          summary: "ProjectMind platform restarted more than 5 times in the last hour"
+          description: "Process crash loop or repeated restarts detected."
+          likely_causes: "Out of memory (OOMKilled), unhandled rejection, or failing readiness probe causing Kubernetes restarts."
+          first_action: "Check 'kubectl describe pod' for termination reason and inspect stderr logs."
+
+      # 9. Memory Pressure
+      - alert: ProjectMindHighMemoryUsage
+        expr: |
+          projectmind_process_memory_rss_bytes > 1073741824
+        for: 5m
+        labels:
+          severity: warning
+          tier: platform
+        annotations:
+          summary: "ProjectMind process RSS memory exceeds 1GB"
+          description: "Process memory consumption has exceeded 1GB for 5 minutes."
+          likely_causes: "Large context packing in memory, in-memory cache accumulation, or memory leak in long-lived agent session."
+          first_action: "Check session counts via /metrics and tune PROJECTMIND_CACHE_MAX_SIZE_MB."

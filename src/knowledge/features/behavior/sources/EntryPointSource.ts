@@ -19,7 +19,7 @@ export class EntryPointSource implements IFeatureBehaviorSource {
         this.sourceId,
         'MAPPED_ENDPOINT',
         `Endpoint mapping ${m.resourceId} for feature ${context.feature.name}`,
-        m.confidence || 0.9,
+        m.score ?? 0.9,
         { mappingId: m.mappingId, resourceId: m.resourceId }
       );
 
@@ -37,7 +37,7 @@ export class EntryPointSource implements IFeatureBehaviorSource {
           route,
           operation: `${method} ${route}`,
         },
-        m.confidence || 0.9
+        m.score ?? 0.9
       );
 
       candidates.push(

@@ -1,0 +1,16 @@
+export const SecurityTokens = {
+  Authenticator: Symbol('security.authenticator'),
+  Authorizer: Symbol('security.authorizer'),
+  IdentityResolver: Symbol('security.identity_resolver'),
+  PrincipalResolver: Symbol('security.principal_resolver'),
+  PermissionResolver: Symbol('security.permission_resolver'),
+  RoleResolver: Symbol('security.role_resolver'),
+  ScopeValidator: Symbol('security.scope_validator'),
+  SecurityPolicyEvaluator: Symbol('security.policy_evaluator'),
+  AuditLogger: Symbol('security.audit_logger'),
+  SecurityContextManager: Symbol('security.context_manager'),
+  ToolSecurityAuthorizer: Symbol('security.tool_authorizer'),
+  CredentialLifecycleManager: Symbol('security.credential_lifecycle_manager'),
+  SecurityIncidentManager: Symbol('security.incident_manager'),
+  SessionManager: Symbol('security.session_manager'),
+} as const;

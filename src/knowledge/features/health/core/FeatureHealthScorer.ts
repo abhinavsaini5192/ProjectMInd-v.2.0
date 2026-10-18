@@ -198,7 +198,7 @@ export class FeatureHealthScorer implements IFeatureHealthScorer {
     ).length;
     const entryPointCount = mappings.filter((m) => m.role === 'ENTRY_POINT').length;
     const coreDomain =
-      feature.type === 'CORE' ||
+      (feature.type as any) === 'CORE' ||
       feature.type === 'PLATFORM' ||
       /auth|payment|billing|core|order|security/i.test(feature.name);
 

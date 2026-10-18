@@ -1,0 +1,15 @@
+export const AgentRuntimeTokens = {
+  IProductionAgentRuntime: Symbol.for('IProductionAgentRuntime'),
+  IAgentRuntimeCoordinator: Symbol.for('IAgentRuntimeCoordinator'),
+  IAgentLifecycleCoordinator: Symbol.for('IAgentLifecycleCoordinator'),
+  IAgentSessionCoordinator: Symbol.for('IAgentSessionCoordinator'),
+  IAgentTaskCoordinator: Symbol.for('IAgentTaskCoordinator'),
+  IAgentContextCoordinator: Symbol.for('IAgentContextCoordinator'),
+  IAgentToolCoordinator: Symbol.for('IAgentToolCoordinator'),
+  IAgentObservationCoordinator: Symbol.for('IAgentObservationCoordinator'),
+  IAgentVerificationCoordinator: Symbol.for('IAgentVerificationCoordinator'),
+  IAgentCheckpointManager: Symbol.for('IAgentCheckpointManager'),
+  IAgentRecoveryManager: Symbol.for('IAgentRecoveryManager'),
+  IAgentRuntimeHealthManager: Symbol.for('IAgentRuntimeHealthManager'),
+  IAgentRuntimeTelemetry: Symbol.for('IAgentRuntimeTelemetry'),
+};

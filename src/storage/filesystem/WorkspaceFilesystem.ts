@@ -1,9 +1,9 @@
-import { IWorkspaceFilesystem } from './interfaces/IWorkspaceFilesystem';
-import { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
-import { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
-import { IWorkspacePointerManager } from './interfaces/IWorkspacePointerManager';
-import { IWorkspacePermissions } from './interfaces/IWorkspacePermissions';
-import { IWorkspaceTemplateManager } from './interfaces/IWorkspaceTemplateManager';
+import type { IWorkspaceFilesystem } from './interfaces/IWorkspaceFilesystem';
+import type { IWorkspaceDirectoryManager } from './interfaces/IWorkspaceDirectoryManager';
+import type { IWorkspaceFileManager } from './interfaces/IWorkspaceFileManager';
+import type { IWorkspacePointerManager } from './interfaces/IWorkspacePointerManager';
+import type { IWorkspacePermissions } from './interfaces/IWorkspacePermissions';
+import type { IWorkspaceTemplateManager } from './interfaces/IWorkspaceTemplateManager';
 import { WorkspaceLockManager } from './WorkspaceLockManager';
 import { WorkspaceCleanupManager } from './WorkspaceCleanupManager';
 import { PathResolver } from './utils/PathResolver';

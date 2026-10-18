@@ -1,0 +1,34 @@
+export type PluginCapability =
+  | 'READ_PROJECT_CONTEXT'
+  | 'READ_FEATURES'
+  | 'READ_ARCHITECTURE'
+  | 'READ_HISTORY'
+  | 'READ_PROJECT_MEMORY'
+  | 'REQUEST_CONTEXT'
+  | 'SUBMIT_FEEDBACK'
+  | 'PROPOSE_KNOWLEDGE_UPDATE'
+  | 'PROVIDE_TOOL'
+  | 'PROVIDE_CONTEXT'
+  | 'PROVIDE_RETRIEVAL'
+  | 'REPORT_VERIFICATION'
+  | 'ACCESS_PLUGIN_CONFIGURATION';
+
+export const ALL_PLUGIN_CAPABILITIES: readonly PluginCapability[] = [
+  'READ_PROJECT_CONTEXT',
+  'READ_FEATURES',
+  'READ_ARCHITECTURE',
+  'READ_HISTORY',
+  'READ_PROJECT_MEMORY',
+  'REQUEST_CONTEXT',
+  'SUBMIT_FEEDBACK',
+  'PROPOSE_KNOWLEDGE_UPDATE',
+  'PROVIDE_TOOL',
+  'PROVIDE_CONTEXT',
+  'PROVIDE_RETRIEVAL',
+  'REPORT_VERIFICATION',
+  'ACCESS_PLUGIN_CONFIGURATION',
+] as const;
+
+export function isPluginCapability(val: unknown): val is PluginCapability {
+  return typeof val === 'string' && ALL_PLUGIN_CAPABILITIES.includes(val as PluginCapability);
+}

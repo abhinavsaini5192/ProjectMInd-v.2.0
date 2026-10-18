@@ -1,0 +1,49 @@
+export type PluginState =
+  | 'DISCOVERED'
+  | 'VALIDATING'
+  | 'REGISTERED'
+  | 'INSTALLING'
+  | 'INSTALLED'
+  | 'INITIALIZING'
+  | 'ENABLED'
+  | 'DISABLED'
+  | 'FAILED'
+  | 'UNINSTALLING'
+  | 'UNINSTALLED'
+  | 'INCOMPATIBLE';
+
+export const ALL_PLUGIN_STATES: readonly PluginState[] = [
+  'DISCOVERED',
+  'VALIDATING',
+  'REGISTERED',
+  'INSTALLING',
+  'INSTALLED',
+  'INITIALIZING',
+  'ENABLED',
+  'DISABLED',
+  'FAILED',
+  'UNINSTALLING',
+  'UNINSTALLED',
+  'INCOMPATIBLE',
+] as const;
+
+const LEGAL_TRANSITIONS: Record<PluginState, readonly PluginState[]> = {
+  DISCOVERED: ['VALIDATING', 'FAILED', 'INCOMPATIBLE'],
+  VALIDATING: ['REGISTERED', 'INCOMPATIBLE', 'FAILED'],
+  REGISTERED: ['INSTALLING', 'INSTALLED', 'UNINSTALLED', 'FAILED'],
+  INSTALLING: ['INSTALLED', 'FAILED'],
+  INSTALLED: ['INITIALIZING', 'ENABLED', 'UNINSTALLING', 'FAILED'],
+  INITIALIZING: ['ENABLED', 'FAILED'],
+  ENABLED: ['DISABLED', 'FAILED', 'UNINSTALLING'],
+  DISABLED: ['INITIALIZING', 'ENABLED', 'UNINSTALLING', 'FAILED'],
+  FAILED: ['INITIALIZING', 'DISABLED', 'UNINSTALLING', 'DISCOVERED'],
+  UNINSTALLING: ['UNINSTALLED', 'FAILED'],
+  UNINSTALLED: ['DISCOVERED', 'REGISTERED'],
+  INCOMPATIBLE: ['VALIDATING', 'UNINSTALLED'],
+};
+
+export function isValidPluginStateTransition(from: PluginState, to: PluginState): boolean {
+  if (from === to) return true;
+  const allowed = LEGAL_TRANSITIONS[from];
+  return allowed ? allowed.includes(to) : false;
+}

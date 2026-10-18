@@ -1,13 +1,22 @@
-import { Plugin, PluginState } from '../interfaces/Plugin';
-import { PluginManifest, validateManifest } from './PluginManifest';
-import { DependencyResolver } from './DependencyResolver';
-import { PermissionManager } from './PermissionManager';
-import { CapabilityRegistry } from './CapabilityRegistry';
-import { ProjectMindSDK } from '../sdk/ProjectMindSDK';
-import { ProjectMindKernel } from '../kernel/ProjectMindKernel';
+import { Plugin, PluginState } from '../interfaces/Plugin.js';
+import { PluginManifest, validateManifest } from './PluginManifest.js';
+import { DependencyResolver } from './DependencyResolver.js';
+import { PermissionManager } from './PermissionManager.js';
+import { CapabilityRegistry } from './CapabilityRegistry.js';
+import { ProjectMindSDK } from '../sdk/ProjectMindSDK.js';
+import type { ProjectMindKernel } from '../kernel/ProjectMindKernel.js';
+import { InMemoryPluginStore } from './services/InMemoryPluginStore.js';
+import { PluginSecurityPolicyEngine } from './services/PluginSecurityPolicyEngine.js';
+import { PluginExecutionManager } from './services/PluginExecutionManager.js';
+import { PluginRegistry } from './services/PluginRegistry.js';
+import { PluginLifecycleManager } from './services/PluginLifecycleManager.js';
+import { PluginService } from './services/PluginService.js';
+import type { IPluginService } from './interfaces/IPluginService.js';
 
 /**
  * The PluginRuntime is responsible for the complete lifecycle of all plugins.
+ * In Phase 9.8, it wraps and exposes the canonical PluginService facade while
+ * preserving 100% backward compatibility for existing kernel callers.
  */
 export class PluginRuntime {
   private plugins: Map<string, Plugin> = new Map();
@@ -15,11 +24,19 @@ export class PluginRuntime {
 
   public readonly permissionManager = new PermissionManager();
   public readonly capabilityRegistry = new CapabilityRegistry();
+  public readonly service: IPluginService;
 
-  constructor(private readonly kernel: ProjectMindKernel) {}
+  constructor(private readonly kernel: ProjectMindKernel) {
+    const store = new InMemoryPluginStore();
+    const securityPolicy = new PluginSecurityPolicyEngine(store);
+    const executionManager = new PluginExecutionManager(store);
+    const registry = new PluginRegistry(store, kernel.eventDispatcher as any);
+    const lifecycle = new PluginLifecycleManager(store, executionManager, securityPolicy, kernel.eventDispatcher as any);
+    this.service = new PluginService(store, registry, lifecycle, securityPolicy, executionManager);
+  }
 
   /**
-   * Registers a plugin manually. In a full implementation, this would dynamically import modules.
+   * Registers a plugin manually.
    * @param manifestRaw The raw JSON manifest.
    * @param plugin The instantiated Plugin object.
    */
@@ -36,6 +53,18 @@ export class PluginRuntime {
     
     // Register permissions requested by the plugin
     this.permissionManager.registerPluginPermissions(plugin.id, manifest.permissions);
+
+    // Also register asynchronously in canonical Phase 9.8 registry
+    this.service.registerPlugin({
+      pluginId: manifest.id,
+      name: manifest.name,
+      version: manifest.version,
+      description: manifest.description,
+      publisher: manifest.author || 'community',
+      entrypoint: manifest.entryPoint,
+      declaredCapabilities: manifest.capabilities ?? [],
+      requestedPermissions: manifest.permissions ?? [],
+    }).catch(() => {});
   }
 
   /**

@@ -1,6 +1,6 @@
 import { DIContainer } from '../../workspace/di/DIContainer';
-import { IEventBusToken, IEventBus } from '../../workspace/interfaces/IEventBus';
-import { ILoggerToken, ILogger } from '../../workspace/interfaces/ILogger';
+import { IEventBusToken, type IEventBus } from '../../workspace/interfaces/IEventBus';
+import { ILoggerToken, type ILogger } from '../../workspace/interfaces/ILogger';
 import * as path from 'path';
 
 import { WorkspaceFilesystem } from './WorkspaceFilesystem';
@@ -21,6 +21,9 @@ import { IWorkspacePermissionsToken } from './interfaces/IWorkspacePermissions';
 import { GlobalWorkspaceLayout, RepositoryWorkspaceLayout } from './models/WorkspaceLayout';
 import { FilesystemEvents } from './types/FilesystemEvents';
 
+export const WorkspaceLockManagerToken = Symbol.for('WorkspaceLockManager');
+export const WorkspaceCleanupManagerToken = Symbol.for('WorkspaceCleanupManager');
+
 export class WorkspaceBootstrap {
   static configure(container: DIContainer): void {
     container.registerSingleton(IWorkspaceDirectoryManagerToken, WorkspaceDirectoryManager);
@@ -32,11 +35,11 @@ export class WorkspaceBootstrap {
       IWorkspaceFileManagerToken
     ]);
 
-    container.registerSingleton('WorkspaceLockManager', WorkspaceLockManager, [
+    container.registerSingleton(WorkspaceLockManagerToken, WorkspaceLockManager, [
       IWorkspaceFileManagerToken
     ]);
 
-    container.registerSingleton('WorkspaceCleanupManager', WorkspaceCleanupManager, [
+    container.registerSingleton(WorkspaceCleanupManagerToken, WorkspaceCleanupManager, [
       IWorkspaceDirectoryManagerToken,
       IWorkspaceFileManagerToken
     ]);
@@ -47,8 +50,8 @@ export class WorkspaceBootstrap {
       IWorkspacePointerManagerToken,
       IWorkspacePermissionsToken,
       IWorkspaceTemplateManagerToken,
-      'WorkspaceLockManager',
-      'WorkspaceCleanupManager'
+      WorkspaceLockManagerToken,
+      WorkspaceCleanupManagerToken
     ]);
   }
 
@@ -58,7 +61,7 @@ export class WorkspaceBootstrap {
     logger: ILogger
   ): Promise<void> {
     const rootPath = fs.getGlobalWorkspacePath();
-    logger.info({ component: 'WorkspaceBootstrap', operation: 'initGlobal', message: `Initializing Global Workspace at ${rootPath}`, severity: 'INFO' });
+    logger.info({ component: 'WorkspaceBootstrap', operation: 'initGlobal', message: `Initializing Global Workspace at ${rootPath}` });
     
     await fs.directories.ensureDirectory(rootPath);
     await fs.directories.createStructure(rootPath, GlobalWorkspaceLayout);
@@ -78,7 +81,7 @@ export class WorkspaceBootstrap {
     eventBus: IEventBus,
     logger: ILogger
   ): Promise<void> {
-    logger.info({ component: 'WorkspaceBootstrap', operation: 'initRepo', message: `Initializing Repo Workspace for ${repositoryId}`, severity: 'INFO' });
+    logger.info({ component: 'WorkspaceBootstrap', operation: 'initRepo', message: `Initializing Repo Workspace for ${repositoryId}` });
     
     const repoWorkspacePath = fs.getRepositoryWorkspacePath(repositoryId);
     

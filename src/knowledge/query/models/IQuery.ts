@@ -7,3 +7,5 @@ export interface IQuery {
   snapshotId?: string; // For historical queries
   repositoryId?: string; // Context bounds
 }
+
+export * from './IQueryResult.js';

@@ -1,9 +1,9 @@
 import { Parser, Tree, Node, Language } from 'web-tree-sitter';
-import { LanguageParser } from '../interfaces/LanguageParser';
-import { Fact } from '../models/Fact';
-import { SymbolExtractor } from '../extractors/SymbolExtractor';
-import { DependencyExtractor } from '../extractors/DependencyExtractor';
-import { APIExtractor } from '../extractors/APIExtractor';
+import { LanguageParser } from '../interfaces/LanguageParser.js';
+import { Fact } from '../models/Fact.js';
+import { SymbolExtractor } from '../extractors/SymbolExtractor.js';
+import { DependencyExtractor } from '../extractors/DependencyExtractor.js';
+import { APIExtractor } from '../extractors/APIExtractor.js';
 
 export class TypescriptParser implements LanguageParser {
   public readonly language = 'typescript';
@@ -15,7 +15,9 @@ export class TypescriptParser implements LanguageParser {
   }
 
   public parse(sourceCode: string): Tree {
-    return this.parser.parse(sourceCode);
+    const tree = this.parser.parse(sourceCode);
+    if (!tree) throw new Error('Failed to parse TypeScript source code');
+    return tree;
   }
 
   public extractSymbols(tree: Tree, filePath: string, commitHash: string): Fact[] {
@@ -41,7 +43,9 @@ export class JavascriptParser implements LanguageParser {
   }
 
   public parse(sourceCode: string): Tree {
-    return this.parser.parse(sourceCode);
+    const tree = this.parser.parse(sourceCode);
+    if (!tree) throw new Error('Failed to parse JavaScript source code');
+    return tree;
   }
 
   public extractSymbols(tree: Tree, filePath: string, commitHash: string): Fact[] {
@@ -68,7 +72,9 @@ export class PythonParser implements LanguageParser {
   }
 
   public parse(sourceCode: string): Tree {
-    return this.parser.parse(sourceCode);
+    const tree = this.parser.parse(sourceCode);
+    if (!tree) throw new Error('Failed to parse Python source code');
+    return tree;
   }
 
   public extractSymbols(tree: Tree, filePath: string, commitHash: string): Fact[] {

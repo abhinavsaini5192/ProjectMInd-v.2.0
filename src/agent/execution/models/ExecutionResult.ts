@@ -1,6 +1,8 @@
 import { ExecutionState } from './ExecutionState';
 import { ActionResult } from './ActionResult';
 
+export type ExecutionChange = string | { path: string; type: string };
+
 export interface ExecutionResult {
   executionId: string;
   taskId: string;
@@ -12,7 +14,7 @@ export interface ExecutionResult {
   blocked: number;
   cancelled: number;
   duration: number;
-  changes: string[];
+  changes: ExecutionChange[];
   warnings: string[];
   errors: string[];
 }

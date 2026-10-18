@@ -21,5 +21,7 @@ export interface FeatureResourceMapping {
   knowledgeVersion: string;
   mappingVersion: number;
   active: boolean;
+  metadata?: Record<string, any>;
+  path?: string;
   deactivationReason?: string;
 }

@@ -1,6 +1,6 @@
-import { IHealthCheck } from './IHealthCheck';
-import { IRegistryStore } from '../interfaces/storage/IRegistryStore';
-import { ILogger } from '../interfaces/ILogger';
+import type { IHealthCheck } from '../IHealthCheck.js';
+import type { IRegistryStore } from '../../interfaces/storage/IRegistryStore.js';
+import type { ILogger } from '../../interfaces/ILogger.js';
 
 export class RegistryHealthCheck implements IHealthCheck {
   name = 'RegistryHealthCheck';

@@ -1,11 +1,11 @@
-import { IStorageManager } from '../interfaces/IStorageManager';
-import { IStorageProvider } from '../interfaces/IStorageProvider';
+import type { IStorageManager } from '../interfaces/IStorageManager';
+import type { IStorageProvider } from '../interfaces/IStorageProvider';
 import { StorageProviderRegistry } from './StorageProviderRegistry';
 import { StorageFactory } from './StorageFactory';
 import { StorageLifecycleManager } from './StorageLifecycleManager';
 import { StorageValidator } from './StorageValidator';
-import { IEventBus } from '../../workspace/interfaces/IEventBus';
-import { ILogger } from '../../workspace/interfaces/ILogger';
+import type { IEventBus } from '../../workspace/interfaces/IEventBus';
+import type { ILogger } from '../../workspace/interfaces/ILogger';
 import { StorageEvents } from '../types/StorageEvents';
 
 export class StorageManager implements IStorageManager {
@@ -19,14 +19,14 @@ export class StorageManager implements IStorageManager {
   ) {}
 
   registerProvider(provider: IStorageProvider): void {
-    this.logger.info({ component: 'StorageManager', operation: 'registerProvider', message: `Registering provider ${provider.name}`, severity: 'INFO' });
+    this.logger.info({ component: 'StorageManager', operation: 'registerProvider', message: `Registering provider ${provider.name}` });
     this.validator.validateProvider(provider);
     this.registry.register(provider);
     this.eventBus.publish(StorageEvents.ProviderRegistered, { providerName: provider.name, type: provider.type });
   }
 
   async initializeAll(): Promise<void> {
-    this.logger.info({ component: 'StorageManager', operation: 'initializeAll', message: 'Initializing all registered providers', severity: 'INFO' });
+    this.logger.info({ component: 'StorageManager', operation: 'initializeAll', message: 'Initializing all registered providers' });
     const providers = this.registry.getAll();
     
     for (const provider of providers) {

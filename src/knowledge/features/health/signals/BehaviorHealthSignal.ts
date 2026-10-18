@@ -47,7 +47,7 @@ export class BehaviorHealthSignal implements IFeatureHealthSignal {
 
       // Check steps for error handling and dead ends
       const hasErrorHandling = flow.steps?.some(
-        (s) => s.stepType === 'ERROR_HANDLING' || /error|catch|fallback|retry/i.test(s.description)
+        (s: any) => s.stepType === 'ERROR_HANDLING' || /error|catch|fallback|retry/i.test(s.description)
       );
       const isSensitiveFlow =
         flow.flowType === 'AUTHENTICATION' ||

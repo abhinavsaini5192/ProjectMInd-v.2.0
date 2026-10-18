@@ -11,6 +11,7 @@ import { FeatureEvidence } from './FeatureEvidence';
 
 export interface Feature {
   id: FeatureId;
+  featureId: FeatureId;
   name: string;
   description: string;
   type: FeatureType;
@@ -22,6 +23,7 @@ export interface Feature {
   references: FeatureReference[];
   relationships: FeatureRelationship[];
   evidence?: FeatureEvidence[];
+  symbolIds?: string[];
   version: number;
   createdAt: number;
   updatedAt: number;
@@ -36,6 +38,7 @@ export function createDefaultFeature(
   const now = Date.now();
   return {
     id,
+    featureId: id,
     name,
     description: options.description || '',
     type: options.type || FeatureType.UNKNOWN,

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: projectmind-api
+  namespace: projectmind
+  labels:
+    app.kubernetes.io/name: projectmind
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: projectmind
+    app.kubernetes.io/component: api

@@ -2,16 +2,38 @@
   "name": "projectmind",
   "version": "1.0.0",
   "description": "**ProjectMind** is an AI-native project memory engine that sits between AI coding agents and software repositories.",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli/cli.d.ts",
+      "import": "./dist/cli/cli.js",
+      "default": "./dist/cli/cli.js"
+    }
+  },
+  "bin": {
+    "projectmind": "./bin/projectmind.js"
+  },
   "scripts": {
-    "test": "vitest run"
+    "build": "tsc --project tsconfig.prod.json && node scripts/fix-dist-specifiers.mjs",
+    "typecheck": "tsc --noEmit",
+    "typecheck:prod": "tsc --project tsconfig.prod.json --noEmit",
+    "test": "vitest run",
+    "cli": "vitest run tests/cli"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "better-sqlite3": "^13.0.3",
+    "ioredis": "^5.11.1",
     "kuzu": "^0.11.3",
     "tree-sitter-wasms": "^0.1.13",
     "web-tree-sitter": "^0.26.11",
@@ -22,5 +44,8 @@
     "@types/node": "^26.1.2",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "tar": "^7.5.22"
   }
 }

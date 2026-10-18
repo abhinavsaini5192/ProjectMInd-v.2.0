@@ -15,7 +15,15 @@ export const ConfigSchema = z.object({
   ignoredPaths: z.array(z.string()).default(['node_modules', '.venv', 'vendor', '.git']),
   
   /** Which parser plugins should be loaded by default */
-  parsers: z.array(z.string()).default(['tree-sitter-typescript', 'tree-sitter-python'])
+  parsers: z.array(z.string()).default(['tree-sitter-typescript', 'tree-sitter-python']),
+
+  /** MCP server settings */
+  mcpEnabled: z.boolean().default(true),
+  mcpServerName: z.string().default('projectmind-mcp-server'),
+  mcpServerVersion: z.string().default('1.0.0'),
+  mcpMaxPayloadBytes: z.number().positive().default(512 * 1024),
+  mcpRequestTimeoutMs: z.number().positive().default(15000),
+  mcpSessionTimeoutMs: z.number().positive().default(30 * 60 * 1000),
 });
 
 /**

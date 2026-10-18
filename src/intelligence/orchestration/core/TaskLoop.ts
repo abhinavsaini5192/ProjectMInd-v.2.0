@@ -1,19 +1,19 @@
-import { Task } from '../models/Task';
-import { TaskState } from '../models/TaskState';
-import { TaskStateMachine } from './TaskStateMachine';
-import { CycleManager } from './CycleManager';
-import { GoalManager } from './GoalManager';
-import { BudgetGuard } from '../guards/BudgetGuard';
-import { LoopGuard } from '../guards/LoopGuard';
-import { ApprovalGuard } from '../guards/ApprovalGuard';
-import { OrchestrationPolicy } from '../policies/OrchestrationPolicy';
-import { ContextAdapter } from '../integration/ContextAdapter';
-import { ReasoningAdapter } from '../integration/ReasoningAdapter';
-import { PlanningAdapter } from '../integration/PlanningAdapter';
-import { ExecutionAdapter } from '../integration/ExecutionAdapter';
-import { FeedbackAdapter } from '../integration/FeedbackAdapter';
+import { Task } from '../models/Task.js';
+import { TaskState } from '../models/TaskState.js';
+import { TaskStateMachine } from './TaskStateMachine.js';
+import { CycleManager } from './CycleManager.js';
+import { GoalManager } from './GoalManager.js';
+import { BudgetGuard } from '../guards/BudgetGuard.js';
+import { LoopGuard } from '../guards/LoopGuard.js';
+import { ApprovalGuard } from '../guards/ApprovalGuard.js';
+import { OrchestrationPolicy } from '../policies/OrchestrationPolicy.js';
+import { ContextAdapter } from '../integration/ContextAdapter.js';
+import { ReasoningAdapter } from '../integration/ReasoningAdapter.js';
+import { PlanningAdapter } from '../integration/PlanningAdapter.js';
+import { ExecutionAdapter } from '../integration/ExecutionAdapter.js';
+import { FeedbackAdapter } from '../integration/FeedbackAdapter.js';
 
-import { PlanFreshnessValidator } from '../../agent/hardening/PlanFreshnessValidator';
+import { PlanFreshnessValidator } from '../../agent/hardening/PlanFreshnessValidator.js';
 
 export class TaskLoop {
   private stateMachine = new TaskStateMachine();
@@ -58,11 +58,11 @@ export class TaskLoop {
     cycle.reasoningResult = reasoningResult;
 
     // Check if reasoning requires user clarification
-    if (reasoningResult.decision.status === 'NEEDS_MORE_INFORMATION' || reasoningResult.uncertainties?.length) {
+    if (reasoningResult.decision.status === 'NEEDS_MORE_INFORMATION' || reasoningResult.uncertainty?.length) {
       task.status = this.stateMachine.transition(task.status, TaskState.WAITING_FOR_USER);
       return {
         task,
-        question: `Clarification needed: ${reasoningResult.uncertainties?.[0] || 'Ambiguous requirement'}`
+        question: `Clarification needed: ${reasoningResult.uncertainty?.[0]?.reason || 'Ambiguous requirement'}`
       };
     }
 

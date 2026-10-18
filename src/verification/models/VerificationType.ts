@@ -1,0 +1,30 @@
+export type VerificationType =
+  | 'TEST'
+  | 'BUILD'
+  | 'LINT'
+  | 'TYPECHECK'
+  | 'STATIC_ANALYSIS'
+  | 'SECURITY_SCAN'
+  | 'INTEGRATION'
+  | 'API_CONTRACT'
+  | 'DATABASE_MIGRATION'
+  | 'DEPLOYMENT'
+  | 'RUNTIME'
+  | 'MANUAL_REVIEW'
+  | 'UNKNOWN';
+
+export const VERIFICATION_TYPES: readonly VerificationType[] = [
+  'TEST',
+  'BUILD',
+  'LINT',
+  'TYPECHECK',
+  'STATIC_ANALYSIS',
+  'SECURITY_SCAN',
+  'INTEGRATION',
+  'API_CONTRACT',
+  'DATABASE_MIGRATION',
+  'DEPLOYMENT',
+  'RUNTIME',
+  'MANUAL_REVIEW',
+  'UNKNOWN',
+];

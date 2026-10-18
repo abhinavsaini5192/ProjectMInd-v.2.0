@@ -1,5 +1,5 @@
-import { SQLiteConnectionManager } from './SQLiteConnectionManager';
-import { DatabaseHealth } from '../models/DatabaseHealth';
+import { SQLiteConnectionManager } from './SQLiteConnectionManager.js';
+import type { DatabaseHealth } from '../models/DatabaseHealth.js';
 
 export class SQLiteHealthMonitor {
   constructor(private connectionManager: SQLiteConnectionManager, private dbName: string) {}
