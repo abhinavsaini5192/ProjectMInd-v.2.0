@@ -29,13 +29,13 @@ flowchart TD
     DEV[Developer] -->|Writes Code| REPO[Software Repository]
     REPO -->|Analyzes| PM[ProjectMind]
     
-    subgraph ProjectMind Platform
+    subgraph PMP["ProjectMind Platform"]
         EXT[Extraction Layer] --> KG[Knowledge Graph]
         KG --> MEM[Memory Engine]
         MEM --> CTX[Context Orchestrator]
     end
     
-    PM -->|Generates| ProjectMind Platform
+    PM -->|Feeds| EXT
     CTX -->|Optimized Payload| AI[AI Assistant]
     AI -->|Understands| DEV
 ```
@@ -172,13 +172,13 @@ ProjectMind fundamentally changes how AI assistants interact with your code. Ins
 
 ```mermaid
 flowchart LR
-    subgraph Without ProjectMind
+    subgraph Without_PM["Without ProjectMind"]
         A1[AI Assistant] -->|Reads 100s of files| R1[Raw Repository]
         R1 -->|Wastes Tokens| A1
         A1 -->|Guesses Context| O1[Output]
     end
 
-    subgraph With ProjectMind
+    subgraph With_PM["With ProjectMind"]
         A2[AI Assistant] -->|Reads STATE.md & GRAPH.json| PM2[.projectmind]
         PM2 -->|Provides exact context| A2
         A2 -->|Highly Accurate| O2[Output]
