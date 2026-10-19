@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "projectmind": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "c:\\Users\\Mummy\\Desktop\\bakwas\\ProjectMind\\dist\\integrations\\mcp\\server\\main.js"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

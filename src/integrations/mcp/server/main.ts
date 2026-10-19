@@ -3,11 +3,22 @@ import process from 'node:process';
 import { ProjectMindMcpServer } from './ProjectMindMcpServer.js';
 import { StdioMcpTransport } from '../transport/StdioMcpTransport.js';
 import { McpToolAdapter } from '../adapters/McpToolAdapter.js';
+import { ProjectMindRepositoryToolAdapter } from '../adapters/ProjectMindRepositoryToolAdapter.js';
 import { AgentToolPipeline } from '../../../agent/protocol/pipeline/AgentToolPipeline.js';
 import { AgentToolRegistry } from '../../../agent/protocol/registry/AgentToolRegistry.js';
 import { AgentSessionManager } from '../../../agent/runtime/AgentSessionManager.js';
 import { AgentRegistry } from '../../../agent/runtime/AgentRegistry.js';
 import { McpSessionManager } from '../adapters/McpSessionManager.js';
+
+// Ensure stdout is reserved exclusively for MCP stdio JSON-RPC transport
+const originalConsoleLog = console.log;
+const originalConsoleInfo = console.info;
+console.log = (...args: unknown[]) => {
+  process.stderr.write(args.map((a) => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ') + '\n');
+};
+console.info = (...args: unknown[]) => {
+  process.stderr.write(args.map((a) => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ') + '\n');
+};
 
 export async function bootstrapMcpServer(): Promise<ProjectMindMcpServer> {
   const args = process.argv.slice(2);
@@ -37,13 +48,19 @@ export async function bootstrapMcpServer(): Promise<ProjectMindMcpServer> {
     agentRegistry,
   });
 
-  const toolAdapter = new McpToolAdapter({
+  const canonicalToolAdapter = new McpToolAdapter({
     pipeline: toolPipeline,
     registry: toolRegistry,
     sessionManager: mcpSessionManager,
   });
 
+  const toolAdapter = new ProjectMindRepositoryToolAdapter({
+    fallbackAdapter: canonicalToolAdapter,
+  });
+
   const server = new ProjectMindMcpServer({
+    name: 'projectmind',
+    version: '1.0.0',
     workspaceId,
     repositoryId,
     toolAdapter,
@@ -53,7 +70,10 @@ export async function bootstrapMcpServer(): Promise<ProjectMindMcpServer> {
   const transport = new StdioMcpTransport();
   await server.start(transport);
 
+  let isStopping = false;
   const shutdown = async () => {
+    if (isStopping) return;
+    isStopping = true;
     try {
       await server.stop();
       process.exit(0);
@@ -64,6 +84,9 @@ export async function bootstrapMcpServer(): Promise<ProjectMindMcpServer> {
 
   process.on('SIGINT', shutdown);
   process.on('SIGTERM', shutdown);
+  process.stdin.on('close', () => {
+    shutdown().catch(() => {});
+  });
 
   return server;
 }

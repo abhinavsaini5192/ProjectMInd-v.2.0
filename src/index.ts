@@ -20,6 +20,7 @@ export * as Production from './production/index.js';
 export * as Plugins from './plugins/index.js';
 export * as Analytics from './analytics/index.js';
 export * as Distributed from './distributed/index.js';
+export * as Mcp from './integrations/mcp/index.js';
 
 // Disambiguate duplicate re-exports from multiple modules
 export type { AgentIdentity } from './security/index.js';
