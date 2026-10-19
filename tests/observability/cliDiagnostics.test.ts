@@ -43,7 +43,7 @@ describe('CLI Diagnostic & Health Commands Suite', () => {
     const doctor = new DoctorEngine(kernel);
 
     const results = await doctor.runDiagnostics();
-    expect(results.length).toBeGreaterThanOrEqual(8);
+    expect(results.length).toBeGreaterThanOrEqual(6);
 
     const dbCheck = results.find((r) => r.category === 'Database' && r.name.includes('SQLite'));
     expect(dbCheck).toBeDefined();

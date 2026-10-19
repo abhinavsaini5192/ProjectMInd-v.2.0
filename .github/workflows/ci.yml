@@ -22,7 +22,7 @@ jobs:
       run: npm ci
       
     - name: Build
-      run: npx tsc
+      run: npm run build
       
     - name: Run Tests
       run: npm test
