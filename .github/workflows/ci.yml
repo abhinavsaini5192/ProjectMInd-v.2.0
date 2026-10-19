@@ -27,4 +27,4 @@ jobs:
     - name: Run Tests
       env:
         NODE_OPTIONS: "--max-old-space-size=4096"
-      run: npm test -- --pool=threads
+      run: npm test -- --no-file-parallelism
