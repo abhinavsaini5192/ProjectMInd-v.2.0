@@ -19,9 +19,15 @@ interface ProcessRunResult {
 
 function spawnRunner(args: string[]): Promise<ProcessRunResult> {
   return new Promise((resolve) => {
+    const env = { ...process.env };
+    delete env['VITEST'];
+    delete env['VITEST_WORKER_ID'];
+    delete env['VITEST_POOL_ID'];
+
     const child = spawn(process.execPath, [FIXTURE_PATH, ...args], {
       stdio: ['ignore', 'pipe', 'pipe'],
       windowsHide: true,
+      env,
     });
 
     let stdout = '';

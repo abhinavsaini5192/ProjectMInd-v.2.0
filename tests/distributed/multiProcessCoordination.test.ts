@@ -18,10 +18,15 @@ function spawnWorker(args: string[]): {
   child: ReturnType<typeof spawn>;
   waitForOutput: (pattern: string, timeoutMs?: number) => Promise<string>;
   resultPromise: Promise<ProcessRunResult>;
-} {
+  const env = { ...process.env };
+  delete env['VITEST'];
+  delete env['VITEST_WORKER_ID'];
+  delete env['VITEST_POOL_ID'];
+
   const child = spawn(process.execPath, [FIXTURE_PATH, ...args], {
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
+    env,
   });
 
   let stdout = '';
