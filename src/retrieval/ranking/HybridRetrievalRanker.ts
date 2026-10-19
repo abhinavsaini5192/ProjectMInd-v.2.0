@@ -55,13 +55,23 @@ export class HybridRetrievalRanker implements IRetrievalRanker {
     const textLower = query.text.toLowerCase();
     const candLower = `${cand.name} ${cand.snippet ?? ''} ${cand.contentReference ?? ''}`.toLowerCase();
 
-    // 1. Lexical Relevance: exact word match
+    // 1. Lexical Relevance: exact word match & exact symbol identification
+    const nameLower = cand.name.toLowerCase();
+    const symbolLower = typeof cand.metadata?.['symbolName'] === 'string'
+      ? (cand.metadata['symbolName'] as string).toLowerCase()
+      : undefined;
+    const isExactSymbol = nameLower === textLower || symbolLower === textLower;
+
     const words = textLower.split(/\W+/).filter((w) => w.length > 2);
     let lexicalMatches = 0;
     for (const w of words) {
       if (candLower.includes(w)) lexicalMatches++;
     }
-    const lexicalRelevance = Math.min(1.0, lexicalMatches > 0 ? 0.3 + lexicalMatches * 0.15 : 0.1);
+
+    let lexicalRelevance = Math.min(1.0, lexicalMatches > 0 ? 0.3 + lexicalMatches * 0.15 : 0.1);
+    if (isExactSymbol) {
+      lexicalRelevance = 1.0;
+    }
 
     // 2. Semantic Relevance: from existing score if from SEMANTIC_INDEX
     const semanticRelevance =

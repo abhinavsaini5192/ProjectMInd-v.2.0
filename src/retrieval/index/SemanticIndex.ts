@@ -55,16 +55,44 @@ export class SemanticIndex implements ISemanticIndex {
         }
       }
 
-      // 3. Cosine Similarity
+      // 3. Cosine Similarity & Relevance Calculation
       const similarity = LocalSemanticEmbeddingProvider.cosineSimilarity(
         queryVector,
         entry.embedding
       );
 
-      if (similarity >= minScore) {
+      let effectiveScore = similarity;
+      if (options.queryText) {
+        const qLower = options.queryText.toLowerCase().trim();
+        const titleLower = entry.title.toLowerCase();
+        const symbolLower = typeof entry.metadata?.['symbolName'] === 'string'
+          ? (entry.metadata['symbolName'] as string).toLowerCase()
+          : undefined;
+
+        const isExactSymbol = titleLower === qLower || symbolLower === qLower;
+        const filePath = (entry.metadata?.['filePath'] as string) ?? entry.contentReference ?? entry.resourceId;
+        const isTest = titleLower.startsWith('test_') || titleLower.endsWith('_test') || filePath.toLowerCase().includes('test');
+
+        if (isExactSymbol && !isTest) {
+          // Exact implementation of the queried symbol: guaranteed top-tier relevance
+          effectiveScore = Math.min(1.0, Math.max(0.95, similarity + 0.50));
+        } else if (isExactSymbol && isTest) {
+          // Exact test for the queried symbol
+          effectiveScore = Math.min(0.85, similarity + 0.25);
+        } else if (
+          titleLower.split(/\W+/).includes(qLower) ||
+          (symbolLower && symbolLower.split(/\W+/).includes(qLower))
+        ) {
+          effectiveScore = Math.min(0.80, similarity + 0.20);
+        } else if (titleLower.includes(qLower)) {
+          effectiveScore = Math.min(0.75, similarity + 0.10);
+        }
+      }
+
+      if (effectiveScore >= minScore) {
         results.push({
           entry,
-          similarityScore: similarity,
+          similarityScore: effectiveScore,
         });
       }
     }
@@ -76,11 +104,12 @@ export class SemanticIndex implements ISemanticIndex {
   }
 
   public async invalidate(resourceId: string, repositoryId: string): Promise<void> {
-    const key = this.makeKey(repositoryId, resourceId);
-    const existing = this.entries.get(key);
+    const directKey = this.makeKey(repositoryId, resourceId);
+    let updated = false;
+
+    const existing = this.entries.get(directKey);
     if (existing) {
-      // Update with stale indicator metadata
-      this.entries.set(key, {
+      this.entries.set(directKey, {
         ...existing,
         updatedAt: Date.now(),
         metadata: {
@@ -89,13 +118,49 @@ export class SemanticIndex implements ISemanticIndex {
           invalidatedAt: Date.now(),
         },
       });
+      updated = true;
+    }
+
+    // Also invalidate any chunk entries belonging to this file resource
+    for (const [key, entry] of this.entries.entries()) {
+      if (
+        entry.repositoryId === repositoryId &&
+        (entry.contentReference === resourceId || entry.resourceId.startsWith(`${resourceId}#`))
+      ) {
+        this.entries.set(key, {
+          ...entry,
+          updatedAt: Date.now(),
+          metadata: {
+            ...entry.metadata,
+            isStale: true,
+            invalidatedAt: Date.now(),
+          },
+        });
+        updated = true;
+      }
+    }
+
+    if (updated) {
       this.version++;
     }
   }
 
   public async remove(resourceId: string, repositoryId: string): Promise<void> {
-    const key = this.makeKey(repositoryId, resourceId);
-    if (this.entries.delete(key)) {
+    const directKey = this.makeKey(repositoryId, resourceId);
+    let deleted = this.entries.delete(directKey);
+
+    // Also remove any chunk entries belonging to this file resource
+    for (const [key, entry] of this.entries.entries()) {
+      if (
+        entry.repositoryId === repositoryId &&
+        (entry.contentReference === resourceId || entry.resourceId.startsWith(`${resourceId}#`))
+      ) {
+        this.entries.delete(key);
+        deleted = true;
+      }
+    }
+
+    if (deleted) {
       this.version++;
     }
   }
@@ -104,7 +169,20 @@ export class SemanticIndex implements ISemanticIndex {
     resourceId: string,
     repositoryId: string
   ): Promise<SemanticIndexEntry | undefined> {
-    return this.entries.get(this.makeKey(repositoryId, resourceId));
+    const direct = this.entries.get(this.makeKey(repositoryId, resourceId));
+    if (direct) return direct;
+
+    // Check for chunk entries belonging to this file resource
+    for (const entry of this.entries.values()) {
+      if (
+        entry.repositoryId === repositoryId &&
+        (entry.contentReference === resourceId || entry.resourceId.startsWith(`${resourceId}#`))
+      ) {
+        return entry;
+      }
+    }
+
+    return undefined;
   }
 
   public async listEntries(repositoryId: string, limit: number = 100): Promise<SemanticIndexEntry[]> {

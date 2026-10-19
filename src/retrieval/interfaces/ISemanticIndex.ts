@@ -22,6 +22,7 @@ export interface SemanticSearchOptions {
   readonly projectId?: string | undefined;
   readonly repositoryId?: string | undefined;
   readonly resourceTypes?: string[] | undefined;
+  readonly queryText?: string | undefined;
 }
 
 export interface SemanticSearchResult {

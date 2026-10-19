@@ -240,7 +240,10 @@ export class ProjectMindRepositoryToolAdapter implements IMcpToolAdapter {
     >();
 
     for (const r of retrievalResults) {
-      const relPath = r.resourceId;
+      const relPath =
+        (r.metadata?.['filePath'] as string) ??
+        r.contentReference ??
+        r.resourceId.split('#')[0]!;
       const existing = fileScoreMap.get(relPath);
       const score = r.score;
       const snippet = r.snippet ? r.snippet.slice(0, 160) : '';
@@ -354,21 +357,29 @@ export class ProjectMindRepositoryToolAdapter implements IMcpToolAdapter {
     });
 
     const formattedResults = results.map((r) => {
-      const fullPath = path.resolve(repoState.projectPath, r.resourceId);
+      const relPath =
+        (r.metadata?.['filePath'] as string) ??
+        r.contentReference ??
+        r.resourceId.split('#')[0]!;
+      const fullPath = path.resolve(repoState.projectPath, relPath);
       const existsOnDisk = fs.existsSync(fullPath);
 
       // Extract line numbers from chunk metadata if available
-      const matchingChunk = repoState.chunks.find((c) => c.name === r.name && c.resourceId === r.resourceId);
+      const matchingChunk = repoState.chunks.find(
+        (c) => c.chunkId === r.resourceId || (c.name === r.name && c.resourceId === relPath)
+      );
+      const startLine = (r.metadata?.['startLine'] as number) ?? matchingChunk?.startLine;
+      const endLine = (r.metadata?.['endLine'] as number) ?? matchingChunk?.endLine;
 
       return {
         name: r.name,
-        resourceId: r.resourceId,
+        resourceId: relPath,
         fullPath: existsOnDisk ? fullPath : undefined,
         source: r.source,
         score: Math.round(r.score * 1000) / 1000,
         snippet: r.snippet,
-        startLine: matchingChunk?.startLine,
-        endLine: matchingChunk?.endLine,
+        startLine,
+        endLine,
         evidence: r.evidence,
         existsOnDisk,
       };
@@ -441,9 +452,13 @@ export class ProjectMindRepositoryToolAdapter implements IMcpToolAdapter {
     const evidence: string[] = [];
 
     for (const m of matches) {
-      const fullPath = path.resolve(repoState.projectPath, m.resourceId);
+      const relPath =
+        (m.metadata?.['filePath'] as string) ??
+        m.contentReference ??
+        m.resourceId.split('#')[0]!;
+      const fullPath = path.resolve(repoState.projectPath, relPath);
       if (fs.existsSync(fullPath)) {
-        verifiedFileSet.add(m.resourceId);
+        verifiedFileSet.add(relPath);
       }
       if (m.name && !keySymbols.includes(m.name)) {
         keySymbols.push(m.name);
@@ -665,7 +680,8 @@ export class ProjectMindRepositoryToolAdapter implements IMcpToolAdapter {
           const embedding = await embeddingProvider.embedText(textToEmbed);
 
           await semanticIndex.index({
-            resourceId: chunk.resourceId,
+            resourceId: chunk.chunkId,
+            contentReference: chunk.resourceId,
             resourceType: chunk.resourceType,
             workspaceId: resolvedPath,
             repositoryId: resolvedPath,
@@ -676,6 +692,12 @@ export class ProjectMindRepositoryToolAdapter implements IMcpToolAdapter {
             sourceVersion: chunk.sourceVersion,
             createdAt: Date.now(),
             updatedAt: Date.now(),
+            metadata: {
+              filePath: chunk.resourceId,
+              startLine: chunk.startLine,
+              endLine: chunk.endLine,
+              symbolName: chunk.symbolName,
+            },
           });
         }
       } catch {

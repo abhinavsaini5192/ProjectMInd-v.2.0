@@ -134,12 +134,14 @@ export class HybridRetrievalEngine implements IRetrievalEngine {
     if (this.semanticIndex && this.embeddingProvider) {
       try {
         const queryVector = await this.embeddingProvider.embedText(query.text);
+        const candidateLimit = Math.min(100, Math.max(30, (query.filters?.limit ?? 15) * 3));
         const searchResults = await this.semanticIndex.search(queryVector, {
           workspaceId: query.workspaceId,
           projectId: query.projectId,
           repositoryId: query.repositoryId,
           minScore: query.filters?.minScore ?? 0.15,
-          limit: query.filters?.limit ?? 15,
+          limit: candidateLimit,
+          queryText: query.text,
         });
 
         for (const res of searchResults) {
@@ -186,6 +188,7 @@ export class HybridRetrievalEngine implements IRetrievalEngine {
                 embeddingVersion: res.entry.embeddingVersion,
                 sourceVersion: res.entry.sourceVersion,
                 projectId: res.entry.projectId,
+                ...res.entry.metadata,
               },
             });
           }
