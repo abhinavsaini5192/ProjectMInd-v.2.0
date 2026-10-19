@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: "--max-old-space-size=4096"
 
     steps:
     - uses: actions/checkout@v4
@@ -24,12 +26,14 @@ jobs:
     - name: Build
       run: npm run build
       
-    - name: Run Tests (Shard 1/2)
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096"
-      run: npm test -- --shard=1/2 --no-file-parallelism
+    - name: Run Tests (Shard 1/4)
+      run: npm test -- --shard=1/4
 
-    - name: Run Tests (Shard 2/2)
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096"
-      run: npm test -- --shard=2/2 --no-file-parallelism
+    - name: Run Tests (Shard 2/4)
+      run: npm test -- --shard=2/4
+
+    - name: Run Tests (Shard 3/4)
+      run: npm test -- --shard=3/4
+
+    - name: Run Tests (Shard 4/4)
+      run: npm test -- --shard=4/4
