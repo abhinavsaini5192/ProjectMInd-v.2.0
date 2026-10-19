@@ -18,6 +18,7 @@ function spawnWorker(args: string[]): {
   child: ReturnType<typeof spawn>;
   waitForOutput: (pattern: string, timeoutMs?: number) => Promise<string>;
   resultPromise: Promise<ProcessRunResult>;
+} {
   const env = { ...process.env };
   delete env['VITEST'];
   delete env['VITEST_WORKER_ID'];
