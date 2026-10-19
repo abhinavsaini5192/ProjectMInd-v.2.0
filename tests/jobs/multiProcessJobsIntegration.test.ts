@@ -35,6 +35,10 @@ function spawnRunner(args: string[]): Promise<ProcessRunResult> {
       stderr += d.toString();
     });
 
+    child.on('error', (err) => {
+      resolve({ code: 1, stdout, stderr: err?.message || String(err) });
+    });
+
     child.on('close', (code) => {
       resolve({ code, stdout, stderr });
     });
@@ -55,6 +59,10 @@ describe('Multi-Process Jobs & Outbox Integration', { timeout: 25000 }, () => {
     dbPath = path.join(tmpDir, 'jobs-test.sqlite');
 
     db = new Database(dbPath);
+    try {
+      db.pragma('journal_mode = WAL');
+      db.pragma('busy_timeout = 10000');
+    } catch {}
     initializeJobDatabaseSchema(db);
     repo = new SqliteJobRepository(db);
     queue = new DurableJobQueue(db);

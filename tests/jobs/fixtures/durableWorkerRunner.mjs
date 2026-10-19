@@ -5,7 +5,10 @@ import { SqliteTransactionalOutbox } from '../../../dist/jobs/events/outbox/Sqli
 
 const [action, dbPath, ...args] = process.argv.slice(2);
 const db = new Database(dbPath, { timeout: 10000 });
-db.pragma('journal_mode = WAL');
+try {
+  db.pragma('journal_mode = WAL');
+  db.pragma('busy_timeout = 10000');
+} catch {}
 
 async function main() {
   if (action === 'claim-and-run') {

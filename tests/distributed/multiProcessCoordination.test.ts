@@ -36,6 +36,9 @@ function spawnWorker(args: string[]): {
   });
 
   const resultPromise = new Promise<ProcessRunResult>((resolve) => {
+    child.on('error', (err) => {
+      resolve({ code: 1, stdout, stderr: err?.message || String(err) });
+    });
     child.on('close', (code) => {
       resolve({ code, stdout, stderr });
     });
